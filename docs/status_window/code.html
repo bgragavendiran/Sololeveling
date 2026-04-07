@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Window - Status</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&amp;family=Share+Tech+Mono&amp;family=Outfit:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#338dfa",
+          "background-light": "#f5f7f8",
+          "background-dark": "#050507",
+          "obsidian": "#111318",
+          "frost": "#E2E8F0",
+          "slate": "#475569",
+          "penalty": "#FF2E2E",
+          "shadow-purple": "#B829DF"
+        },
+        fontFamily: {
+          "display": ["Space Grotesk", "sans-serif"],
+          "rajdhani": ["Rajdhani", "sans-serif"],
+          "mono": ["Share Tech Mono", "monospace"],
+          "body": ["Outfit", "sans-serif"]
+        },
+        borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        boxShadow: {
+          'neon-blue': '0 0 10px rgba(51, 141, 250, 0.5), 0 0 20px rgba(51, 141, 250, 0.3)',
+          'neon-purple': '0 0 10px rgba(184, 41, 223, 0.5), 0 0 20px rgba(184, 41, 223, 0.3)',
+        }
+      },
+    },
+  }
+</script>
+<style>
+    body {
+        font-family: 'Outfit', sans-serif;
+        background-color: #050507;
+        color: #E2E8F0;
+    }
+    
+    .glow-border {
+        border: 1px solid #338dfa;
+        box-shadow: 0 0 8px rgba(51, 141, 250, 0.6), inset 0 0 8px rgba(51, 141, 250, 0.2);
+    }
+    
+    .glow-text {
+        text-shadow: 0 0 8px rgba(51, 141, 250, 0.8);
+    }
+    
+    .stat-fill {
+        background: linear-gradient(90deg, #1A2235 0%, #338dfa 100%);
+        box-shadow: 0 0 10px rgba(51, 141, 250, 0.7);
+    }
+    
+    .diamond-shape {
+        transform: rotate(45deg);
+    }
+    .diamond-content {
+        transform: rotate(-45deg);
+    }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark min-h-screen flex flex-col items-center justify-between overflow-x-hidden selection:bg-primary selection:text-white">
+<!-- Top Header -->
+<div class="w-full flex items-center bg-obsidian border-b border-[#1A2235] p-4 pt-8 justify-between relative z-10 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+<h2 class="text-frost text-sm md:text-base font-rajdhani font-bold leading-tight tracking-widest flex-1 text-center uppercase drop-shadow-[0_0_2px_rgba(226,232,240,0.5)]">
+            SUNG JIN-WOO <span class="text-primary mx-2 opacity-70">|</span> TITLE: PLAYER
+        </h2>
+</div>
+<!-- Main Content Area -->
+<main class="w-full max-w-md flex-1 flex flex-col items-center px-4 py-8 gap-8 overflow-y-auto">
+<!-- Rank Badge Section -->
+<div class="flex flex-col items-center justify-center mt-4 mb-2 w-full">
+<div class="relative w-[120px] h-[120px] flex items-center justify-center mb-6">
+<!-- Outer Diamond -->
+<div class="absolute inset-0 border border-primary diamond-shape shadow-neon-blue bg-obsidian z-0"></div>
+<!-- Inner Diamond Accents -->
+<div class="absolute inset-[8px] border border-[#1A2235] diamond-shape z-10"></div>
+<!-- Rank Text -->
+<div class="diamond-content z-20 flex flex-col items-center">
+<span class="font-rajdhani font-bold text-5xl text-white glow-text leading-none tracking-tighter">A</span>
+<span class="font-mono text-[10px] text-primary tracking-widest mt-1">RANK</span>
+</div>
+</div>
+<div class="font-mono text-xs text-slate tracking-[0.2em] uppercase">Status Evaluation: <span class="text-primary glow-text">Stable</span></div>
+</div>
+<!-- Earning Goal -->
+<div class="w-full bg-obsidian border border-[#2A1535] rounded p-3 text-center shadow-neon-purple mt-2 mb-4 relative overflow-hidden group cursor-pointer">
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-[#B829DF]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+<p class="font-mono text-sm tracking-widest text-shadow-purple font-bold" style="text-shadow: 0 0 8px rgba(184, 41, 223, 0.8);">
+                GOLD: 4,500 <span class="text-slate font-normal">/ 10,000</span>
+</p>
+</div>
+<!-- Stat Bars Section -->
+<div class="w-full flex flex-col gap-4">
+<!-- STR Stat -->
+<div class="w-full flex flex-col gap-1 cursor-pointer group">
+<div class="flex justify-between items-end px-1">
+<span class="font-mono text-xs text-frost tracking-wider">STR [STRENGTH]</span>
+<span class="font-rajdhani text-sm font-bold text-primary glow-text">45<span class="text-slate text-xs">/100</span></span>
+</div>
+<div class="w-full h-6 bg-obsidian border border-[#1A2235] rounded relative overflow-hidden group-hover:border-primary/50 transition-colors duration-300">
+<div class="absolute top-0 left-0 h-full stat-fill w-[45%]"></div>
+<!-- Glitch/Scanline effect overlay -->
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSJ0cmFuc3BhcmVudCIvPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIi8+Cjwvc3ZnPg==')] opacity-50 mix-blend-overlay"></div>
+</div>
+</div>
+<!-- APT Stat -->
+<div class="w-full flex flex-col gap-1 cursor-pointer group">
+<div class="flex justify-between items-end px-1">
+<span class="font-mono text-xs text-frost tracking-wider">APT [APTITUDE]</span>
+<span class="font-rajdhani text-sm font-bold text-primary glow-text">82<span class="text-slate text-xs">/100</span></span>
+</div>
+<div class="w-full h-6 bg-obsidian border border-[#1A2235] rounded relative overflow-hidden group-hover:border-primary/50 transition-colors duration-300">
+<div class="absolute top-0 left-0 h-full stat-fill w-[82%]"></div>
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSJ0cmFuc3BhcmVudCIvPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIi8+Cjwvc3ZnPg==')] opacity-50 mix-blend-overlay"></div>
+</div>
+</div>
+<!-- INT Stat -->
+<div class="w-full flex flex-col gap-1 cursor-pointer group">
+<div class="flex justify-between items-end px-1">
+<span class="font-mono text-xs text-frost tracking-wider">INT [INTELLIGENCE]</span>
+<span class="font-rajdhani text-sm font-bold text-primary glow-text">30<span class="text-slate text-xs">/100</span></span>
+</div>
+<div class="w-full h-6 bg-obsidian border border-[#1A2235] rounded relative overflow-hidden group-hover:border-primary/50 transition-colors duration-300">
+<div class="absolute top-0 left-0 h-full stat-fill w-[30%]"></div>
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSJ0cmFuc3BhcmVudCIvPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIi8+Cjwvc3ZnPg==')] opacity-50 mix-blend-overlay"></div>
+</div>
+<!-- Expanded Graph Area (Simulating Expanded State for INT) -->
+<div class="w-full mt-2 bg-obsidian border border-[#1A2235] rounded p-3 shadow-inner relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#1A2235]/30"></div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-mono text-[10px] text-slate">30 DAY HISTORY</span>
+<span class="font-mono text-[10px] text-primary">+5% M/M</span>
+</div>
+<!-- Placeholder for actual Canvas/SVG graph -->
+<div class="h-24 w-full relative flex items-end justify-between px-1 border-b border-slate/30 border-l pb-1 pl-1">
+<!-- Simulated graph bars -->
+<div class="w-2 bg-primary/20 h-[30%]"></div>
+<div class="w-2 bg-primary/30 h-[40%]"></div>
+<div class="w-2 bg-primary/40 h-[35%]"></div>
+<div class="w-2 bg-primary/50 h-[50%]"></div>
+<div class="w-2 bg-primary/60 h-[45%]"></div>
+<div class="w-2 bg-primary/80 h-[70%] text-center relative shadow-neon-blue">
+<div class="absolute -top-4 -left-2 text-[8px] font-mono text-primary w-6">TODAY</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END Stat -->
+<div class="w-full flex flex-col gap-1 cursor-pointer group">
+<div class="flex justify-between items-end px-1">
+<span class="font-mono text-xs text-frost tracking-wider">END [ENDURANCE]</span>
+<span class="font-rajdhani text-sm font-bold text-primary glow-text">55<span class="text-slate text-xs">/100</span></span>
+</div>
+<div class="w-full h-6 bg-obsidian border border-[#1A2235] rounded relative overflow-hidden group-hover:border-primary/50 transition-colors duration-300">
+<div class="absolute top-0 left-0 h-full stat-fill w-[55%]"></div>
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSJ0cmFuc3BhcmVudCIvPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSIxIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIi8+Cjwvc3ZnPg==')] opacity-50 mix-blend-overlay"></div>
+</div>
+</div>
+</div>
+<!-- Decorative Spacer to ensure scrolling clears Bottom Nav -->
+<div class="h-8"></div>
+</main>
+<!-- BottomNavBar (Shared Component) -->
+<div class="w-full mt-auto sticky bottom-0 z-50">
+<div class="flex gap-2 border-t border-[#1A2235] bg-obsidian px-4 pb-3 pt-2 shadow-[0_-4px_20px_rgba(0,0,0,0.8)] relative">
+<!-- Active indicator glow (Status tab) -->
+<div class="absolute top-0 left-[16.6%] w-12 h-[2px] bg-primary shadow-neon-blue transform -translate-x-1/2"></div>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-primary" href="#">
+<div class="text-primary flex h-8 items-center justify-center" data-icon="User" data-size="24px" data-weight="fill" style="filter: drop-shadow(0 0 5px rgba(51, 141, 250, 0.8));">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<p class="text-primary text-[10px] font-mono font-bold uppercase tracking-widest">Status</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-slate hover:text-frost transition-colors" href="#">
+<div class="text-slate flex h-8 items-center justify-center" data-icon="CheckSquare" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">square</span>
+</div>
+<p class="text-slate text-[10px] font-mono font-medium uppercase tracking-widest">Quests</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-slate hover:text-frost transition-colors" href="#">
+<div class="text-slate flex h-8 items-center justify-center" data-icon="Gear" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">search_gear</span>
+</div>
+<p class="text-slate text-[10px] font-mono font-medium uppercase tracking-widest">Settings</p>
+</a>
+</div>
+<!-- System Base Bar -->
+<div class="h-2 bg-background-dark w-full border-t border-[#1A2235]"></div>
+</div>
+</body></html>

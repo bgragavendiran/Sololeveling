@@ -1,0 +1,195 @@
+# The System Window (Dark RPG)
+
+## Product Overview
+
+**The Pitch:** A brutal, high-stakes habit tracker that transforms self-improvement into a life-or-death RPG. Complete daily quests to rank up; fail, and face aggressive system penalties. 
+
+**For:** Gamers and intense productivity seekers who respond to harsh accountability, gamification, and manhwa-style aesthetics.
+
+**Device:** mobile
+
+**Design Direction:** A dark, neon-accented UI inspired by the Solo Leveling system interface. Deep void blacks, glowing holographic blue borders, stark typography, and aggressive red penalty alerts.
+
+**Inspired by:** Solo Leveling (Manhwa interface), Habitica (gamification on hard mode)
+
+---
+
+## Screens
+
+- **Status Window:** Player dashboard showing Rank, Core Stats (STR, APT, INT, END), and level progression.
+- **Quest Log:** Daily habits categorized by stat type with holographic checkboxes.
+- **Active Zone (Pomodoro):** Locked, full-screen DND timer for Aptitude tasks.
+- **System Penalty:** Aggressive, red-tinted failure screen for missed streaks.
+- **Rank Evaluation:** Status screen showing promotion or demotion based on 21-day cycles.
+
+---
+
+## Key Flows
+
+**Initiating an Aptitude Quest:** User starts a learning task.
+1. User is on **Quest Log** -> sees "Deep Work Session" under Aptitude.
+2. User clicks `[Start Quest]` -> Transitions to **Active Zone**.
+3. UI locks, DND activates, neon blue timer counts down.
+
+**Facing a System Penalty:** User misses a habit 3 days in a row.
+1. User opens app -> Intercepted by **System Penalty** screen.
+2. Screen flashes red, displays "QUEST FAILED: PREPARE FOR DEMOTION".
+3. User clicks `[Accept Penalty]` -> Rank drops, stats take a temporary debuff.
+
+---
+
+<details>
+<summary>Design System</summary>
+
+## Color Palette
+
+- **Primary:** `#2E8CFF` - System Blue (Glowing borders, active states, progress fills)
+- **Background:** `#050507` - Void Black (App background, true dark)
+- **Surface:** `#111318` - Obsidian (Cards, modals, with 1px solid `#1A2235` border)
+- **Text:** `#E2E8F0` - Frost White (Primary text)
+- **Muted:** `#475569` - Slate (Inactive quests, zeroed stats)
+- **Accent:** `#FF2E2E` - Penalty Red (Failures, warnings, demotions)
+- **Secondary Accent:** `#B829DF` - Shadow Purple (Earning goals, rare achievements)
+
+## Typography
+
+Distinctive, angular, and digital. Evokes a heads-up display.
+
+- **Headings/Numbers:** `Rajdhani`, 700, 24-48px (Used for Ranks, Timers, Big Stats)
+- **System Alerts:** `Share Tech Mono`, 400, 12-14px (Used for metadata, logs, timestamps)
+- **Body:** `Outfit`, 400, 16px (Used for quest descriptions, readable text)
+- **Buttons:** `Rajdhani`, 600, 16px, ALL CAPS, 2px letter-spacing
+
+**Style notes:** Sharp corners (0-2px border radius). Heavy use of custom drawing and shadows for neon glow effects. Minimalist layout with borders framing everything like a holographic projection.
+
+## Design Tokens
+
+```kotlin
+// Color.kt
+val SystemBlue = Color(0xFF2E8CFF)
+val VoidBlack = Color(0xFF050507)
+val Obsidian = Color(0xFF111318)
+val FrostWhite = Color(0xFFE2E8F0)
+val Slate = Color(0xFF475569)
+val PenaltyRed = Color(0xFFFF2E2E)
+
+// Dimens.kt / Shape.kt
+val RadiusSmall = 0.dp
+val RadiusMedium = 2.dp
+val BorderSystem = 1.dp
+```
+
+</details>
+
+---
+
+<details>
+<summary>Screen Specifications</summary>
+
+### Status Window
+
+**Purpose:** The main hub showing the user's current RPG stats and rank.
+
+**Layout:** Top header (Player Name & Title), upper middle (Rank Badge), lower middle (Stat Bars), bottom (Navigation).
+
+**Key Elements:**
+- **Rank Badge:** 120px tall, sharp diamond shape. Displays current rank from K-Rank up to A-Rank (alphabetical, representing levels 0-9), and then S-Rank (Max). Reaching S-Rank unlocks the progression path to the ultimate 'Shadow Monarch' title, which requires leveling through 10 distinct zones within S-Rank (representing 18 months of consistency). Unranked shows as "PLAYER".
+- **Stat Bars (STR, APT, INT, END):** 4 stacked horizontal bars. 24px height. `Share Tech Mono` labels. Neon blue fill, dark gray track.
+- **Earning Goal:** Purple glowing text block showing current vs target income, formatted as `GOLD: 4,500 / 10,000`.
+
+**States:**
+- **Empty:** "NO STATS RECORDED. BEGIN QUESTS."
+- **Loading:** Glitch text effect over stats.
+
+**Components:**
+- **Stat Bar:** 100% width, 24px height, `Obsidian` background, `SystemBlue` fill with custom neon glow Modifier.
+
+**Interactions:**
+- **Click Stat Bar:** Expands to show historical line graph (30 days).
+
+**Responsive:**
+- **Mobile:** Full width stacked layout.
+
+### Quest Log
+
+**Purpose:** Daily checklist of habits organized by stat category.
+
+**Layout:** Sticky header "DAILY QUESTS", scrolling list of categories, bottom nav.
+
+**Key Elements:**
+- **Category Headers:** "STRENGTH (FITNESS)", "INTELLIGENCE (MIND)". 14px `Share Tech Mono`, blue border-bottom.
+- **Quest Items:** 64px height rows. Checkbox on left (square, 1px blue border), Quest Title, Stat Reward on right (`+2 STR`).
+- **Endurance Sync:** Auto-checked item showing "SLEEP SYNCED: PIXEL WATCH".
+
+**States:**
+- **Empty:** "ALL QUESTS COMPLETE. STANDBY."
+- **Error:** Red border if sync fails with Pixel Watch.
+
+**Interactions:**
+- **Click Checkbox:** Fills with `SystemBlue`, strikes through text, triggers haptic feedback, plays UI 'ping' sound.
+- **Swipe Left:** Reveal "SKIP" (Costs 100 Gold).
+
+**Responsive:**
+- **Mobile:** Single column list, touch-friendly 64dp targets.
+
+### Active Zone (Pomodoro)
+
+**Purpose:** Distraction-free, locked timer for Aptitude/Deep Work quests.
+
+**Layout:** Centered monolithic timer, no navigation, single abort button.
+
+**Key Elements:**
+- **Countdown Timer:** 120px `Rajdhani`, centered. `SystemBlue` text with heavy glow.
+- **Pulsing Ring:** SVG/Canvas circle around timer, slowly depleting.
+- **Abort Button:** Bottom center. Text: "ABORT QUEST (INCURS PENALTY)". Red text, no background.
+
+**States:**
+- **Running:** Timer counts down, ring pulses.
+- **Completed:** Screen flashes blue. "QUEST COMPLETE. +5 APT."
+
+**Interactions:**
+- **Hold Abort Button (3s):** Triggers failure state. Screen shakes, transitions to System Penalty.
+
+**Responsive:**
+- **Mobile:** Fills viewport completely, status bar hidden.
+
+### System Penalty
+
+**Purpose:** Aggressive failure notification when dropping a streak or aborting a quest.
+
+**Layout:** Full screen overlay, heavy red tint, centered harsh typography.
+
+**Key Elements:**
+- **Warning Header:** "SYSTEM ALERT" in 32px `Rajdhani`, `PenaltyRed`, flashing animation.
+- **Failure Reason:** "YOU HAVE FAILED TO COMPLETE 3 CONSECUTIVE STRENGTH QUESTS."
+- **Penalty Result:** "-1 RANK. -10 STR."
+- **Acceptance Button:** Full width, red background, black text. "ACCEPT PUNISHMENT".
+
+**Components:**
+- **Penalty Modal:** 85% width, centered. Black background, heavy 2dp red border, heavy red glow.
+
+**Interactions:**
+- **Click Button:** Dismisses modal, routes back to Status Window with red hit-flash animation.
+
+**Responsive:**
+- **Mobile:** Centers vertically, disables all background interaction.
+
+</details>
+
+---
+
+<details>
+<summary>Build Guide</summary>
+
+**Stack:** Kotlin + Jetpack Compose
+
+**Architecture/State:** MVVM with `StateFlow` to manage reactive UI states (timer ticks, stat adjustments, quest completion).
+
+**Build Order:**
+1. **Design System Setup:** Define `Color.kt` and `Type.kt` using exact hex codes and custom fonts (`Rajdhani`, `Share Tech Mono`, `Outfit`). Create custom `Modifier` extensions (e.g., using `drawBehind` with `Paint` and `BlurMaskFilter`) to achieve the signature neon box-shadow glows and sharp borders.
+2. **Status Window:** Build the core `StatusWindowScreen` Composable. Implement reusable `StatBar` Composables using `Box` and `fillMaxWidth(fraction)` for precise, animated value fills.
+3. **Quest Log:** Build the scrollable layout using `LazyColumn`. Construct interactive `QuestRow` Composables with custom checkboxes, utilizing `SwipeToDismissBox` for the swipe-to-skip functionality.
+4. **Active Zone:** Implement `ActiveZoneScreen` utilizing a centered layout. Drive the countdown timer via a `StateFlow` and use a `Canvas` Composable to draw and animate the pulsing countdown ring.
+5. **System Penalty:** Create the `SystemPenaltyOverlay` using a `Dialog` or full-screen Composable layered over the navigation graph. Add overriding alert modifiers and flashing animations to finalize the aggressive penalty aesthetics.
+
+</details>

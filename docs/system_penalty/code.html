@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Penalty</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&amp;family=Noto+Sans:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#338dfa",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#050507",
+                        "obsidian": "#111318",
+                        "penalty-red": "#FF2E2E",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "sm": "0.125rem",
+                        "md": "0.25rem",
+                        "lg": "0.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #050507;
+            color: #E2E8F0;
+        }
+        
+        .glow-red {
+            box-shadow: 0 0 20px rgba(255, 46, 46, 0.6), inset 0 0 10px rgba(255, 46, 46, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex items-center justify-center relative overflow-hidden bg-background-dark">
+<!-- Deep Red Tint Overlay / Scrim -->
+<div class="absolute inset-0 bg-[#FF2E2E]/10 backdrop-blur-sm z-0 pointer-events-none"></div>
+<!-- Screen Content Wrapper -->
+<div class="relative z-10 w-full max-w-[400px] flex flex-col items-center justify-center px-4">
+<!-- Penalty Modal container -->
+<div class="w-[85%] bg-obsidian border-2 border-penalty-red rounded flex flex-col items-center justify-center p-6 glow-red text-center">
+<!-- Icon -->
+<div class="mb-4 text-penalty-red">
+<span class="material-symbols-outlined text-6xl" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<!-- Flashing Header -->
+<h1 class="text-penalty-red tracking-widest text-3xl font-bold leading-tight mb-2 uppercase animate-pulse">
+                SYSTEM ALERT
+            </h1>
+<!-- Subheader / Failure Reason -->
+<h2 class="text-white text-lg font-bold mb-4 uppercase tracking-wide">
+                QUEST FAILED: PREPARE FOR DEMOTION
+            </h2>
+<!-- Detailed Explanation -->
+<p class="text-gray-300 text-sm font-normal leading-relaxed mb-6 font-body">
+                YOU HAVE FAILED TO COMPLETE 3 CONSECUTIVE STRENGTH QUESTS.
+            </p>
+<!-- Penalty Result Box -->
+<div class="w-full bg-black/50 border border-penalty-red/50 rounded py-3 mb-8">
+<p class="text-penalty-red text-xl font-bold tracking-widest uppercase">
+                    -1 RANK
+                </p>
+<p class="text-penalty-red text-xl font-bold tracking-widest uppercase">
+                    -10 STR
+                </p>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-penalty-red hover:bg-[#d62828] text-black font-bold text-lg py-4 rounded uppercase tracking-[2px] transition-colors focus:outline-none focus:ring-4 focus:ring-penalty-red/50 active:bg-white active:text-penalty-red">
+                ACCEPT PUNISHMENT
+            </button>
+</div>
+</div>
+</body></html>

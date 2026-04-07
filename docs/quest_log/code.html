@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Window - Quest Log</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#338dfa",
+              "background-light": "#f5f7f8",
+              "background-dark": "#0f1823",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .neon-glow {
+            box-shadow: 0 0 8px theme('colors.primary'), inset 0 0 4px theme('colors.primary');
+        }
+        .neon-text-glow {
+            text-shadow: 0 0 8px theme('colors.primary');
+        }
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27303a;
+            border-radius: 2px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-display text-white antialiased selection:bg-primary selection:text-white min-h-screen flex flex-col">
+<!-- SHARED COMPONENT: BottomNavBar (Strict Inclusion) -->
+<div class="relative flex h-auto w-full flex-col bg-[#111418] dark group/design-root overflow-x-hidden" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+<div class="flex gap-2 border-t border-[#27303a] bg-[#1b2127] px-4 pb-3 pt-2">
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#9ba9bb]" href="#">
+<div class="text-[#9ba9bb] flex h-8 items-center justify-center" data-icon="User" data-size="24px" data-weight="regular">
+<svg fill="currentColor" height="24px" viewbox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
+<path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
+</svg>
+</div>
+<p class="text-[#9ba9bb] text-xs font-medium leading-normal tracking-[0.015em]">Status</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-white" href="#">
+<div class="text-white flex h-8 items-center justify-center" data-icon="CheckSquare" data-size="24px" data-weight="fill">
+<svg fill="currentColor" height="24px" viewbox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
+<path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm-34.34,77.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"></path>
+</svg>
+</div>
+<p class="text-white text-xs font-medium leading-normal tracking-[0.015em]">Quests</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#9ba9bb]" href="#">
+<div class="text-[#9ba9bb] flex h-8 items-center justify-center" data-icon="Gear" data-size="24px" data-weight="regular">
+<svg fill="currentColor" height="24px" viewbox="0 0 256 256" width="24px" xmlns="http://www.w3.org/2000/svg">
+<path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"></path>
+</svg>
+</div>
+<p class="text-[#9ba9bb] text-xs font-medium leading-normal tracking-[0.015em]">Settings</p>
+</a>
+</div>
+<div class="flex items-center bg-[#111418] p-4 pb-2 justify-between border-b border-primary/30">
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pl-12 pr-12 neon-text-glow">DAILY QUESTS</h2>
+</div>
+<div class="h-1 bg-gradient-to-b from-primary/10 to-transparent"></div>
+</div>
+<!-- MAIN CONTENT AREA -->
+<main class="flex-1 overflow-y-auto px-4 py-6 space-y-10">
+<!-- CATEGORY: STRENGTH -->
+<section class="space-y-4">
+<h3 class="text-xs font-bold text-gray-400 tracking-[0.15em] border-b border-primary pb-2 uppercase">Strength (Fitness)</h3>
+<!-- Quest Item: Active -->
+<div class="group relative flex h-16 w-full items-center gap-4 rounded bg-gray-900/60 px-4 border border-gray-800 hover:border-primary/50 transition-colors cursor-pointer">
+<div class="flex h-5 w-5 items-center justify-center rounded border border-primary bg-transparent transition-all group-active:scale-95 group-hover:neon-glow"></div>
+<p class="flex-1 truncate text-sm font-medium text-gray-200">100 Push-ups, 100 Sit-ups, 10km Run</p>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-primary tracking-wider neon-text-glow">+5 STR</span>
+</div>
+</div>
+<!-- Quest Item: Active -->
+<div class="group relative flex h-16 w-full items-center gap-4 rounded bg-gray-900/60 px-4 border border-gray-800 hover:border-primary/50 transition-colors cursor-pointer">
+<div class="flex h-5 w-5 items-center justify-center rounded border border-primary bg-transparent transition-all group-active:scale-95 group-hover:neon-glow"></div>
+<p class="flex-1 truncate text-sm font-medium text-gray-200">Lift Heavy Objects (Gym Session)</p>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-primary tracking-wider neon-text-glow">+3 STR</span>
+</div>
+</div>
+</section>
+<!-- CATEGORY: INTELLIGENCE -->
+<section class="space-y-4">
+<h3 class="text-xs font-bold text-gray-400 tracking-[0.15em] border-b border-primary pb-2 uppercase">Intelligence (Mind)</h3>
+<!-- Quest Item: Active -->
+<div class="group relative flex h-16 w-full items-center gap-4 rounded bg-gray-900/60 px-4 border border-gray-800 hover:border-primary/50 transition-colors cursor-pointer">
+<div class="flex h-5 w-5 items-center justify-center rounded border border-primary bg-transparent transition-all group-active:scale-95 group-hover:neon-glow"></div>
+<p class="flex-1 truncate text-sm font-medium text-gray-200">Read 20 pages of nonfiction</p>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-primary tracking-wider neon-text-glow">+2 INT</span>
+</div>
+</div>
+</section>
+<!-- CATEGORY: APTITUDE -->
+<section class="space-y-4 overflow-hidden">
+<h3 class="text-xs font-bold text-gray-400 tracking-[0.15em] border-b border-primary pb-2 uppercase">Aptitude (Work)</h3>
+<!-- Quest Item: Swiped State Simulation -->
+<div class="relative h-16 w-full rounded bg-red-900/20 border border-red-500/50 overflow-hidden">
+<!-- Background Action (Revealed on swipe) -->
+<div class="absolute inset-y-0 right-0 flex items-center justify-end px-6 w-full bg-red-600/10">
+<span class="text-xs font-bold text-red-500 tracking-wider">SKIP (100 GOLD)</span>
+</div>
+<!-- Foreground Content (Shifted left) -->
+<div class="absolute inset-0 flex items-center gap-4 bg-gray-900/90 px-4 border border-gray-800 -translate-x-32 transition-transform cursor-pointer shadow-[-8px_0_15px_rgba(0,0,0,0.5)]">
+<div class="flex h-5 w-5 items-center justify-center rounded border border-primary bg-transparent"></div>
+<p class="flex-1 truncate text-sm font-medium text-gray-200">Deep Work Session</p>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-primary tracking-wider neon-text-glow">+3 APT</span>
+</div>
+</div>
+</div>
+</section>
+<!-- CATEGORY: ENDURANCE -->
+<section class="space-y-4">
+<h3 class="text-xs font-bold text-gray-400 tracking-[0.15em] border-b border-primary pb-2 uppercase">Endurance (Recovery)</h3>
+<!-- Quest Item: Completed / Synced State -->
+<div class="relative flex h-16 w-full items-center gap-4 rounded bg-gray-900/40 px-4 border border-primary/30 opacity-70">
+<div class="flex h-5 w-5 items-center justify-center rounded border border-primary bg-primary neon-glow">
+<span class="material-symbols-outlined text-background-dark text-[16px] font-bold" data-icon="check">check</span>
+</div>
+<p class="flex-1 truncate text-sm font-medium text-gray-500 line-through">SLEEP SYNCED: PIXEL WATCH</p>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-primary/50 tracking-wider">+2 END</span>
+</div>
+</div>
+<!-- Quest Item: Error State Simulation -->
+<div class="relative flex h-16 w-full items-center gap-4 rounded bg-red-950/20 px-4 border border-red-500/40">
+<div class="flex h-5 w-5 items-center justify-center rounded border border-red-500 bg-transparent shadow-[0_0_8px_theme('colors.red.500')]">
+<span class="material-symbols-outlined text-red-500 text-[14px]" data-icon="close">close</span>
+</div>
+<p class="flex-1 truncate text-sm font-medium text-red-400">HYDRATION: SYNC FAILED</p>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-red-500/80 tracking-wider text-right">RETRY</span>
+</div>
+</div>
+</section>
+<!-- Bottom Spacer for easy scrolling above imaginary physical bezel -->
+<div class="h-8"></div>
+</main>
+</body></html>

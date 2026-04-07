@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rank Evaluation - The System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#338dfa",
+              "background-light": "#f5f7f8",
+              "background-dark": "#050507", // Void Black
+              "surface-dark": "#111318",   // Obsidian
+              "system-blue": "#2E8CFF",
+              "frost-white": "#E2E8F0",
+              "slate-muted": "#475569",
+              "penalty-red": "#FF2E2E",
+              "shadow-purple": "#B829DF"
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+            boxShadow: {
+              'neon-blue': '0 0 10px rgba(46, 140, 255, 0.5), 0 0 20px rgba(46, 140, 255, 0.3)',
+              'neon-red': '0 0 15px rgba(255, 46, 46, 0.6), inset 0 0 10px rgba(255, 46, 46, 0.2)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #050507;
+            color: #E2E8F0;
+        }
+        
+        /* Custom neon effects */
+        .neon-border-blue {
+            border: 1px solid #2E8CFF;
+            box-shadow: 0 0 8px rgba(46, 140, 255, 0.4), inset 0 0 4px rgba(46, 140, 255, 0.2);
+        }
+        
+        .neon-text-blue {
+            color: #2E8CFF;
+            text-shadow: 0 0 8px rgba(46, 140, 255, 0.6);
+        }
+
+        .neon-border-red {
+            border: 1px solid #FF2E2E;
+            box-shadow: 0 0 12px rgba(255, 46, 46, 0.5), inset 0 0 6px rgba(255, 46, 46, 0.3);
+        }
+
+        .neon-text-red {
+            color: #FF2E2E;
+            text-shadow: 0 0 10px rgba(255, 46, 46, 0.8);
+        }
+
+        .glitch-text {
+            position: relative;
+            animation: glitch-anim 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+            10% { clip-path: inset(50% 0 30% 0); transform: translate(2px, -1px); }
+            20% { clip-path: inset(10% 0 60% 0); transform: translate(-1px, 2px); }
+            30% { clip-path: inset(80% 0 5% 0); transform: translate(1px, -2px); }
+            40% { clip-path: inset(40% 0 20% 0); transform: translate(-2px, 1px); }
+            100% { clip-path: inset(0% 0 0% 0); transform: translate(0); }
+        }
+
+        /* Scanline effect */
+        .scanlines::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 50;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden scanlines">
+<!-- Background Grid Effect -->
+<div class="absolute inset-0 bg-[linear-gradient(to_right,#111318_1px,transparent_1px),linear-gradient(to_bottom,#111318_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none"></div>
+<!-- Main Container -->
+<main class="w-full max-w-md mx-auto p-6 relative z-10 flex flex-col h-screen justify-between py-12">
+<!-- Header Section -->
+<header class="text-center space-y-2 relative">
+<div class="inline-flex items-center justify-center space-x-2 bg-system-blue/10 px-4 py-1 neon-border-blue rounded-sm mb-4">
+<span class="material-symbols-outlined text-system-blue text-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="text-system-blue text-xs tracking-[0.2em] font-bold uppercase">System Message</span>
+</div>
+<h1 class="text-frost-white tracking-widest text-3xl font-bold leading-tight glitch-text uppercase">
+                Evaluation<br/>Complete
+            </h1>
+<p class="text-slate-muted text-sm uppercase tracking-widest mt-2">Cycle 04 Finalized</p>
+</header>
+<!-- Rank Transition Section -->
+<section class="flex flex-col items-center justify-center py-8 relative">
+<!-- Decorative Hexagon/Diamond background shape -->
+<div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+<div class="w-64 h-64 border border-system-blue rotate-45 transform"></div>
+<div class="w-48 h-48 border border-system-blue rotate-45 transform absolute"></div>
+</div>
+<div class="text-center space-y-4 relative z-10">
+<h2 class="text-system-blue text-sm uppercase tracking-[0.3em] font-bold">Promotion Achieved</h2>
+<div class="flex items-center justify-center space-x-6 text-5xl font-bold tracking-tighter">
+<span class="text-slate-muted opacity-50 relative">
+                        C-RANK
+                        <div class="absolute w-full h-[2px] bg-slate-muted top-1/2 left-0 -translate-y-1/2"></div>
+</span>
+<span class="material-symbols-outlined text-system-blue text-4xl neon-text-blue">arrow_forward</span>
+<span class="text-frost-white neon-text-blue scale-110 transform transition-transform">
+                        B-RANK
+                    </span>
+</div>
+</div>
+</section>
+<!-- Metrics & Stats Breakdown -->
+<section class="space-y-4 w-full">
+<!-- Consistency Card -->
+<div class="bg-surface-dark neon-border-blue rounded-sm p-4 relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-1 h-full bg-system-blue"></div>
+<div class="flex justify-between items-end mb-2">
+<span class="text-slate-muted text-xs uppercase tracking-widest">Consistency Rate</span>
+<span class="text-system-blue text-2xl font-bold neon-text-blue">92%</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-1 bg-background-dark mt-2">
+<div class="h-full bg-system-blue shadow-neon-blue w-[92%]"></div>
+</div>
+<div class="flex justify-between text-[10px] text-slate-muted mt-2 uppercase">
+<span>Quests: 61/63</span>
+<span>Penalties: 0</span>
+</div>
+</div>
+<!-- Stat Delta Card -->
+<div class="bg-surface-dark border border-slate-muted/30 rounded-sm p-4">
+<h3 class="text-slate-muted text-xs uppercase tracking-widest mb-4 text-center border-b border-slate-muted/30 pb-2">Attribute Adjustments</h3>
+<div class="grid grid-cols-2 gap-4">
+<!-- STR -->
+<div class="flex justify-between items-center bg-background-dark px-3 py-2 border border-slate-muted/20 rounded-sm">
+<span class="text-slate-muted text-xs font-mono">STR</span>
+<span class="text-system-blue text-sm font-bold font-mono">+15</span>
+</div>
+<!-- APT -->
+<div class="flex justify-between items-center bg-background-dark px-3 py-2 border border-slate-muted/20 rounded-sm">
+<span class="text-slate-muted text-xs font-mono">APT</span>
+<span class="text-system-blue text-sm font-bold font-mono">+10</span>
+</div>
+<!-- INT -->
+<div class="flex justify-between items-center bg-background-dark px-3 py-2 border border-slate-muted/20 rounded-sm">
+<span class="text-slate-muted text-xs font-mono">INT</span>
+<span class="text-system-blue text-sm font-bold font-mono">+5</span>
+</div>
+<!-- END -->
+<div class="flex justify-between items-center bg-background-dark px-3 py-2 border border-slate-muted/20 rounded-sm">
+<span class="text-slate-muted text-xs font-mono">END</span>
+<span class="text-system-blue text-sm font-bold font-mono">+8</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Action Button -->
+<div class="mt-8">
+<button class="w-full bg-system-blue/10 border border-system-blue text-system-blue font-bold uppercase tracking-[0.2em] py-4 rounded-sm hover:bg-system-blue hover:text-background-dark transition-all duration-300 shadow-neon-blue relative overflow-hidden group">
+<span class="relative z-10">Claim New Rank</span>
+<div class="absolute inset-0 h-full w-0 bg-system-blue transition-all duration-300 ease-out group-hover:w-full z-0"></div>
+</button>
+</div>
+</main>
+</body></html>

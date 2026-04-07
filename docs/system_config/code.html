@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The System Window - Configuration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&amp;family=Share+Tech+Mono&amp;family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container": "#201f22",
+                    "surface-dim": "#131316",
+                    "surface-tint": "#a9c7ff",
+                    "on-tertiary-fixed": "#00201d",
+                    "tertiary-fixed": "#79f7ea",
+                    "on-primary-fixed-variant": "#00468b",
+                    "error": "#ffb4ab",
+                    "surface-container-high": "#2a2a2d",
+                    "outline": "#8b919f",
+                    "tertiary-fixed-dim": "#5adace",
+                    "on-primary-fixed": "#001b3d",
+                    "error-container": "#93000a",
+                    "inverse-surface": "#e5e1e5",
+                    "surface-bright": "#39393c",
+                    "inverse-primary": "#005db6",
+                    "on-surface-variant": "#c1c6d6",
+                    "secondary": "#ffb4ab",
+                    "on-secondary": "#690005",
+                    "on-primary": "#003063",
+                    "on-tertiary-fixed-variant": "#00504a",
+                    "surface-container-lowest": "#0e0e11",
+                    "on-primary-container": "#002957",
+                    "on-surface": "#e5e1e5",
+                    "on-tertiary": "#003733",
+                    "secondary-fixed-dim": "#ffb4ab",
+                    "on-secondary-fixed": "#410002",
+                    "primary-fixed-dim": "#a9c7ff",
+                    "on-tertiary-container": "#00302c",
+                    "surface": "#131316",
+                    "background": "#131316",
+                    "on-secondary-container": "#ffe7e4",
+                    "surface-variant": "#353438",
+                    "surface-container-low": "#1c1b1e",
+                    "tertiary": "#5adace",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-highest": "#353438",
+                    "outline-variant": "#414753",
+                    "primary-container": "#3b90ff",
+                    "tertiary-container": "#00a297",
+                    "secondary-fixed": "#ffdad6",
+                    "secondary-container": "#d70016",
+                    "primary": "#a9c7ff",
+                    "on-error": "#690005",
+                    "on-background": "#e5e1e5",
+                    "primary-fixed": "#d6e3ff",
+                    "on-secondary-fixed-variant": "#93000b",
+                    "inverse-on-surface": "#313033"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0px",
+                    "lg": "0px",
+                    "xl": "0px",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Rajdhani", "sans-serif"],
+                    "body": ["Inter", "sans-serif"],
+                    "label": ["Share Tech Mono", "monospace"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .clipped-corner {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+        }
+        .clipped-corner-reverse {
+            clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px);
+        }
+        .glass-panel {
+            background: rgba(32, 31, 34, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-[#050507]/60 backdrop-blur-xl border-b-[0.5px] border-blue-500/20 shadow-[0_0_20px_rgba(46,140,255,0.15)]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-highest flex items-center justify-center overflow-hidden border border-primary/30">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="Cyberpunk hunter profile avatar with blue neon accents and digital visor overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-vpYJCfhVQ4k-jWBmfEhMe-axDvKThZ062ZnqiwG5LfYJ0y1tOhxalKB6RW1UcP0XFQhLCK-5ro5qySNS-eDyWaSmmyeSWzklS4-xcY8HFIAM8Pzxtf9WBfn1maSXEI0pwjpuxmlMw-Nju6C9TEW3tsuqxUGPIsuU7Uhl5pVVo5mA0X3jI51oqmd2vu6uZvsS2OlFj6ADh2Sm51jVMYeHauM9gtJcoxP8t9PYzdTe9G13-51WEIgPk_SfActROD9OcEm66xbewvQ"/>
+</div>
+<h1 class="font-headline uppercase tracking-widest font-bold text-blue-500 text-xl italic">SYSTEM STATUS</h1>
+</div>
+<div class="flex items-center gap-4 text-blue-500">
+<span class="material-symbols-outlined hover:text-blue-300 transition-colors cursor-pointer" data-icon="sensors">sensors</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-5xl mx-auto space-y-8">
+<!-- Rank Progression HUD -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 glass-panel p-6 clipped-corner relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="shield">shield</span>
+</div>
+<h2 class="font-headline text-3xl font-black italic text-primary uppercase mb-1">RANK: B+</h2>
+<div class="flex items-baseline gap-2 mb-6">
+<span class="font-label text-sm text-outline uppercase tracking-widest">Evolution Cycle</span>
+<span class="font-label text-xl text-primary-container">14/21 DAYS</span>
+</div>
+<!-- Progression Bar -->
+<div class="flex gap-1 h-3 mb-4">
+<div class="flex-1 bg-primary shadow-[0_0_10px_rgba(169,199,255,0.5)]"></div>
+<div class="flex-1 bg-primary shadow-[0_0_10px_rgba(169,199,255,0.5)]"></div>
+<div class="flex-1 bg-primary shadow-[0_0_10px_rgba(169,199,255,0.5)]"></div>
+<div class="flex-1 bg-surface-container-highest"></div>
+<div class="flex-1 bg-surface-container-highest"></div>
+</div>
+<p class="font-label text-[10px] text-outline uppercase">Consistency requirement for Rank A threshold: 66% Complete</p>
+</div>
+<div class="bg-surface-container-high p-6 flex flex-col justify-between border-l-2 border-primary/50">
+<div>
+<h3 class="font-headline text-sm font-bold text-outline uppercase tracking-widest mb-4">Active Penalties</h3>
+<div class="space-y-3">
+<div class="flex items-center gap-3 text-secondary">
+<span class="material-symbols-outlined text-lg" data-icon="warning">warning</span>
+<span class="font-label text-xs uppercase">Sleep Deprivation: -5% AGI</span>
+</div>
+<div class="flex items-center gap-3 opacity-30 text-on-surface">
+<span class="material-symbols-outlined text-lg" data-icon="check_circle">check_circle</span>
+<span class="font-label text-xs uppercase">No active task failures</span>
+</div>
+</div>
+</div>
+<div class="mt-6">
+<button class="w-full bg-secondary text-on-secondary font-headline font-bold py-2 clipped-corner uppercase text-sm tracking-widest hover:brightness-110 transition-all">
+                        CLEAR PENALTIES
+                    </button>
+</div>
+</div>
+</section>
+<!-- Configuration Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Learning Timer -->
+<div class="glass-panel p-6 border-b border-primary/20">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="hourglass_empty">hourglass_empty</span>
+<h3 class="font-headline text-xl font-bold uppercase italic">Aptitude Timer</h3>
+</div>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between font-label text-xs mb-2">
+<span class="text-outline uppercase">Duration Setting</span>
+<span class="text-primary-container">45 MINUTES</span>
+</div>
+<input class="w-full h-1 bg-surface-container-highest appearance-none cursor-pointer accent-primary" max="120" min="15" step="15" type="range" value="45"/>
+</div>
+<div class="p-4 bg-surface-container-lowest border border-outline-variant/20">
+<p class="text-[11px] text-outline leading-relaxed">System Aptitude windows determine the intensity of information absorption. Higher durations increase EXP gain but risk significant <span class="text-secondary">Mental Fatigue</span>.</p>
+</div>
+</div>
+</div>
+<!-- Underling Status -->
+<div class="glass-panel p-6 border-b border-primary/20">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="group">group</span>
+<h3 class="font-headline text-xl font-bold uppercase italic">Underling Sync</h3>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center p-3 bg-surface-container-low">
+<div>
+<p class="font-headline text-sm font-bold uppercase">Sub-System Alpha</p>
+<p class="font-label text-[10px] text-primary">STATUS: CONNECTED</p>
+</div>
+<span class="material-symbols-outlined text-primary animate-pulse" data-icon="link">link</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-surface-container-low opacity-50">
+<div>
+<p class="font-headline text-sm font-bold uppercase">Sub-System Beta</p>
+<p class="font-label text-[10px] text-outline">STATUS: OFFLINE</p>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="link_off">link_off</span>
+</div>
+<button class="w-full border border-primary/30 text-primary font-label text-[10px] py-2 uppercase tracking-widest hover:bg-primary/5 transition-colors">
+                        Initialize New Protocol
+                    </button>
+</div>
+</div>
+</section>
+<!-- System Toggles -->
+<section class="glass-panel p-8 space-y-8 clipped-corner-reverse border-t border-primary/10">
+<h3 class="font-headline text-2xl font-black italic uppercase tracking-wider text-outline/50">System Preferences</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<p class="font-headline text-lg font-bold uppercase">System Notifications</p>
+<p class="text-xs text-outline max-w-[240px]">Direct neural alerts for Quest spawns and Rank shifts.</p>
+</div>
+<button class="w-12 h-6 bg-primary-container relative p-1 flex items-center justify-end">
+<div class="w-4 h-4 bg-on-primary-container"></div>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<p class="font-headline text-lg font-bold uppercase">Watch Sync Status</p>
+<p class="text-xs text-outline max-w-[240px]">Enable bi-directional telemetry with Hunter-grade wearables.</p>
+</div>
+<button class="w-12 h-6 bg-primary relative p-1 flex items-center justify-end shadow-[0_0_15px_rgba(169,199,255,0.4)]">
+<div class="w-4 h-4 bg-on-primary"></div>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<p class="font-headline text-lg font-bold uppercase">Aggressive HUD Overlay</p>
+<p class="text-xs text-outline max-w-[240px]">Force system interface priority over third-party applications.</p>
+</div>
+<button class="w-12 h-6 bg-surface-container-highest relative p-1 flex items-center justify-start">
+<div class="w-4 h-4 bg-outline"></div>
+</button>
+</div>
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<p class="font-headline text-lg font-bold uppercase">Auto-Save Protocols</p>
+<p class="text-xs text-outline max-w-[240px]">Continuous state backup to secure cloud nodes.</p>
+</div>
+<button class="w-12 h-6 bg-primary-container relative p-1 flex items-center justify-end">
+<div class="w-4 h-4 bg-on-primary-container"></div>
+</button>
+</div>
+</div>
+</section>
+<!-- Log Export Card -->
+<div class="relative h-48 w-full overflow-hidden clipped-corner border border-primary/20 group cursor-pointer">
+<img alt="Data Flow" class="w-full h-full object-cover brightness-50 grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Cinematic macro shot of digital data streams and glowing binary code particles in a dark void" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2gpP9oZwe5fDXaiXo06qm0FxICiCFneyj-mKebTr9XdUdEYs91k1nXMwqTnFfFDAs3a-HnzQvy8yCy32Q47ndFUg7URlwQqoNOS0MmnG5WZyrqFCH17Nwwrqc2HDvvwKBFkCPCXxux5KEUMcowM--nCVKERlLEeYElenoBpoWpzxuEvCFXqat9cSS43mnsDhOf5pVfqGk4sYzNXOFQzAUwLbdZVnMzv02HcjfgIUw4BkOALiLZFQxPGdbbPnjIqiepCen39wHl9Y"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent flex flex-col justify-end p-8">
+<h4 class="font-headline text-2xl font-black italic uppercase text-primary">Evolution Data Log</h4>
+<p class="font-label text-xs text-outline-variant uppercase">Archive all system actions and rank progression for external analysis.</p>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-primary animate-ping" data-icon="download">download</span>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-[#050507]/80 backdrop-blur-2xl border-t-[0.5px] border-blue-500/30 shadow-[0_-10px_30px_rgba(46,140,255,0.1)]">
+<a class="flex flex-col items-center justify-center text-slate-700 opacity-50 hover:opacity-100 hover:text-blue-200 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter uppercase">STATUS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-700 opacity-50 hover:opacity-100 hover:text-blue-200 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter uppercase">QUESTS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-700 opacity-50 hover:opacity-100 hover:text-blue-200 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="query_stats">query_stats</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter uppercase">STATS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-blue-400 drop-shadow-[0_0_8px_rgba(46,140,255,0.8)] border-t-2 border-blue-500 pt-1 -mt-1" href="#">
+<span class="material-symbols-outlined" data-icon="settings_suggest">settings_suggest</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter uppercase">CONFIG</span>
+</a>
+</nav>
+</body></html>

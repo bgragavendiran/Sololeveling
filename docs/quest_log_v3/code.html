@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Status - Quest Log V3</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700;900&amp;family=Share+Tech+Mono&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "tertiary": "#5adace",
+                "on-tertiary": "#003733",
+                "on-primary-fixed": "#001b3d",
+                "inverse-on-surface": "#313033",
+                "tertiary-fixed": "#79f7ea",
+                "surface-container-low": "#1c1b1e",
+                "surface-variant": "#353438",
+                "surface-container-highest": "#353438",
+                "on-background": "#e5e1e5",
+                "on-surface-variant": "#c1c6d6",
+                "surface-bright": "#39393c",
+                "primary-container": "#3b90ff",
+                "on-secondary": "#690005",
+                "outline-variant": "#414753",
+                "error": "#ffb4ab",
+                "on-primary-fixed-variant": "#00468b",
+                "inverse-primary": "#005db6",
+                "secondary-fixed": "#ffdad6",
+                "surface-tint": "#a9c7ff",
+                "surface-container-high": "#2a2a2d",
+                "secondary-fixed-dim": "#ffb4ab",
+                "primary": "#a9c7ff",
+                "on-error": "#690005",
+                "surface-container-lowest": "#0e0e11",
+                "on-surface": "#e5e1e5",
+                "inverse-surface": "#e5e1e5",
+                "secondary-container": "#d70016",
+                "surface": "#131316",
+                "on-tertiary-fixed": "#00201d",
+                "error-container": "#93000a",
+                "background": "#131316",
+                "tertiary-container": "#00a297",
+                "surface-container": "#201f22",
+                "tertiary-fixed-dim": "#5adace",
+                "primary-fixed": "#d6e3ff",
+                "surface-dim": "#131316",
+                "on-secondary-container": "#ffe7e4",
+                "on-tertiary-fixed-variant": "#00504a",
+                "on-primary": "#003063",
+                "primary-fixed-dim": "#a9c7ff",
+                "on-tertiary-container": "#00302c",
+                "outline": "#8b919f",
+                "on-secondary-fixed-variant": "#93000b",
+                "on-primary-container": "#002957",
+                "on-error-container": "#ffdad6",
+                "secondary": "#ffb4ab",
+                "on-secondary-fixed": "#410002"
+            },
+            "borderRadius": {
+                "DEFAULT": "0px",
+                "lg": "0px",
+                "xl": "0px",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Rajdhani"],
+                "body": ["Inter"],
+                "label": ["Share Tech Mono"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .clipped-btn {
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0 100%);
+        }
+        .hud-glass {
+            background: rgba(5, 5, 7, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        .glowing-border {
+            box-shadow: 0 0 10px rgba(46, 140, 255, 0.2);
+            border: 0.5px solid rgba(46, 140, 255, 0.3);
+        }
+        .flicker-on-press:active {
+            opacity: 0.7;
+            filter: hue-rotate(15deg);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#050507] text-on-background font-body min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full border-b-[0.5px] border-blue-500/20 bg-black/60 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full z-50 shadow-[0_0_20px_rgba(46,140,255,0.1)]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container-highest border border-primary/30 flex items-center justify-center">
+<img alt="Player Profile Avatar" class="w-8 h-8 opacity-80" data-alt="Cyberpunk style profile avatar with glowing blue circuitry lines on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgXVDgq1KINz_PL_OqtXQaWFdF2a1nGzt4FJVQzfjAE6Nb8NoL44HG-hn-31ZTVVXPAcpfSG5gr6vaev5L7v-_7hUY_4FZTOfV1iakPYDz92KQoU2u8vOQ6gvA6sWt46ABxSiYGQJ8yP3crVlrW78IzWikPGJbrystrGxGPjOERD0tpfRZTD1dihqOUS40rdo5qUUCtwTYJdL_51bA5gyibqsbi3DA5y_aFCeV5BPadhfyfnRA4AHUWu7dhFhOZOZRcVh2ycEBC9M"/>
+</div>
+<h1 class="font-['Rajdhani'] font-bold uppercase tracking-widest text-xl text-[#2E8CFF] drop-shadow-[0_0_8px_rgba(46,140,255,0.8)]">SYSTEM STATUS</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#2E8CFF]" data-icon="signal_cellular_alt">signal_cellular_alt</span>
+</div>
+</header>
+<main class="pt-24 px-6 max-w-4xl mx-auto space-y-8">
+<!-- Rank & Vital HUD -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 hud-glass glowing-border p-6 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-2 font-label text-[10px] text-primary/40 uppercase">System Time: 04:22:11</div>
+<div class="flex items-end gap-4 mb-4">
+<span class="font-headline text-6xl font-black text-primary leading-none uppercase">Rank S</span>
+<span class="font-label text-sm text-primary/60 mb-1 uppercase">Level 88 Hunter</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between font-label text-xs uppercase tracking-tighter">
+<span>XP Progress</span>
+<span>94.2%</span>
+</div>
+<div class="h-4 bg-surface-container-highest flex">
+<div class="h-full bg-primary shadow-[0_0_15px_rgba(46,140,255,0.6)]" style="width: 94.2%"></div>
+<div class="h-full bg-primary/20" style="width: 5.8%"></div>
+</div>
+</div>
+</div>
+<div class="hud-glass glowing-border p-6 flex flex-col justify-between">
+<div class="font-headline font-bold text-primary uppercase tracking-wider">Mind Sync</div>
+<div class="text-center py-4">
+<div class="font-label text-4xl text-primary">88<span class="text-xl">%</span></div>
+<div class="font-label text-[10px] text-primary/40 uppercase">Recovery Optimal</div>
+</div>
+<div class="flex justify-between gap-1 h-2">
+<div class="flex-1 bg-primary"></div>
+<div class="flex-1 bg-primary"></div>
+<div class="flex-1 bg-primary"></div>
+<div class="flex-1 bg-primary/20"></div>
+<div class="flex-1 bg-primary/20"></div>
+</div>
+</div>
+</section>
+<!-- Quest Log Header -->
+<div class="flex items-center justify-between">
+<h2 class="font-headline text-3xl font-black uppercase tracking-tighter text-white">ACTIVE QUESTS</h2>
+<div class="font-label text-[10px] bg-primary/10 text-primary px-3 py-1 border border-primary/30 uppercase">5 Items Tracking</div>
+</div>
+<!-- Quest Grid / List -->
+<div class="grid grid-cols-1 gap-4">
+<!-- Meditation Quest (NEW RECOVERY CATEGORY) -->
+<div class="hud-glass glowing-border p-5 border-l-4 border-l-tertiary/60 transition-all hover:bg-white/5 group">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="mt-1 p-2 bg-tertiary/10 text-tertiary border border-tertiary/20">
+<span class="material-symbols-outlined" data-icon="self_improvement">self_improvement</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label text-[10px] text-tertiary tracking-widest uppercase">Mind / Recovery</span>
+<span class="w-1 h-1 bg-tertiary/40 rounded-full"></span>
+<span class="font-label text-[10px] text-white/40 uppercase">Daily Limit: 0/1</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-white uppercase group-hover:text-tertiary transition-colors">STILLNESS PROTOCOL</h3>
+<p class="text-xs text-white/60 font-body max-w-md">Clear neuro-pathways and reset cortisol levels through 15 minutes of deep focus meditation.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right hidden md:block">
+<div class="font-label text-[10px] text-white/40 uppercase">Reward</div>
+<div class="font-label text-sm text-tertiary uppercase">+50 Recovery</div>
+</div>
+<button class="clipped-btn bg-tertiary text-on-tertiary px-6 py-2 font-headline font-black uppercase text-sm flicker-on-press hover:bg-tertiary-fixed transition-colors">
+                            START TIMER
+                        </button>
+</div>
+</div>
+</div>
+<!-- Strength Quest -->
+<div class="hud-glass glowing-border p-5 border-l-4 border-l-primary/60 transition-all hover:bg-white/5 group">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="mt-1 p-2 bg-primary/10 text-primary border border-primary/20">
+<span class="material-symbols-outlined" data-icon="fitness_center">fitness_center</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label text-[10px] text-primary tracking-widest uppercase">Strength</span>
+<span class="w-1 h-1 bg-primary/40 rounded-full"></span>
+<span class="font-label text-[10px] text-white/40 uppercase">Urgent</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-white uppercase">MUSCLE FIBER RECONSTRUCTION</h3>
+<p class="text-xs text-white/60 font-body max-w-md">Push beyond physiological limits. 100 Repetitions of functional compound movements.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right font-label text-sm text-primary uppercase">60/100</div>
+<button class="clipped-btn border border-primary/50 text-primary px-6 py-2 font-headline font-black uppercase text-sm hover:bg-primary/10 transition-colors">
+                            UPDATE
+                        </button>
+</div>
+</div>
+</div>
+<!-- Intelligence Quest -->
+<div class="hud-glass glowing-border p-5 border-l-4 border-l-white/20 transition-all hover:bg-white/5 group">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="mt-1 p-2 bg-white/5 text-white/60 border border-white/10">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label text-[10px] text-white/40 tracking-widest uppercase">Intelligence</span>
+<span class="w-1 h-1 bg-white/10 rounded-full"></span>
+<span class="font-label text-[10px] text-white/40 uppercase">Continuous</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-white uppercase">NEURAL UPLOAD</h3>
+<p class="text-xs text-white/60 font-body max-w-md">Consume 2 chapters of technical documentation or architectural theory.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right font-label text-sm text-white/40 uppercase">0/2</div>
+<button class="clipped-btn border border-white/20 text-white/40 px-6 py-2 font-headline font-black uppercase text-sm cursor-not-allowed">
+                            LOCKED
+                        </button>
+</div>
+</div>
+</div>
+<!-- Endurance Quest -->
+<div class="hud-glass glowing-border p-5 border-l-4 border-l-primary/60 transition-all hover:bg-white/5 group">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="mt-1 p-2 bg-primary/10 text-primary border border-primary/20">
+<span class="material-symbols-outlined" data-icon="directions_run">directions_run</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label text-[10px] text-primary tracking-widest uppercase">Endurance</span>
+<span class="w-1 h-1 bg-primary/40 rounded-full"></span>
+<span class="font-label text-[10px] text-white/40 uppercase">Active</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-white uppercase">VOID RUNNER</h3>
+<p class="text-xs text-white/60 font-body max-w-md">Complete a 10km navigation through high-density urban terrain.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right font-label text-sm text-primary uppercase">4.2/10 KM</div>
+<button class="clipped-btn bg-primary text-on-primary px-6 py-2 font-headline font-black uppercase text-sm flicker-on-press">
+                            LOG
+                        </button>
+</div>
+</div>
+</div>
+<!-- Aptitude Quest -->
+<div class="hud-glass glowing-border p-5 border-l-4 border-l-tertiary/40 transition-all hover:bg-white/5 group opacity-80">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="mt-1 p-2 bg-tertiary/5 text-tertiary/60 border border-tertiary/10">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label text-[10px] text-tertiary/60 tracking-widest uppercase">Aptitude</span>
+</div>
+<h3 class="font-headline text-xl font-bold text-white uppercase">REFLEX CALIBRATION</h3>
+<p class="text-xs text-white/40 font-body max-w-md">Engage in high-speed cognitive tasks to improve reaction thresholds.</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="clipped-btn border border-tertiary/30 text-tertiary/60 px-6 py-2 font-headline font-black uppercase text-sm hover:bg-tertiary/10 transition-colors">
+                            RE-SYNC
+                        </button>
+</div>
+</div>
+</div>
+<!-- Add Custom Quest Row -->
+<div class="mt-4 p-4 border border-dashed border-primary/30 flex items-center justify-center group cursor-pointer hover:bg-primary/5 transition-all">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary group-hover:scale-125 transition-transform" data-icon="add_circle">add_circle</span>
+<span class="font-headline font-bold text-primary uppercase tracking-widest text-lg">INITIALIZE CUSTOM QUEST</span>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for quick access (suppressed as per rules on detail/log pages, but kept for context as "Add Custom" is already in list) -->
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 pb-4 bg-[#050507]/80 backdrop-blur-2xl border-t-[0.5px] border-blue-500/20 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-slate-600 grayscale hover:text-blue-400 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="person_pin">person_pin</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter">STATUS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#2E8CFF] drop-shadow-[0_0_5px_rgba(46,140,255,1)] scale-110" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_late" style="font-variation-settings: 'FILL' 1;">assignment_late</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter">QUESTS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-600 grayscale hover:text-blue-400 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="bar_chart">bar_chart</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter">STATS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-600 grayscale hover:text-blue-400 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter">CONFIG</span>
+</a>
+</nav>
+</body></html>

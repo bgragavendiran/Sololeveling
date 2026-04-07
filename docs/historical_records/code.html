@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>System Status - Historical HUD</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&amp;family=Share+Tech+Mono&amp;family=Inter:wght@400;500&amp;family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#201f22",
+                        "surface-dim": "#131316",
+                        "surface-tint": "#a9c7ff",
+                        "on-tertiary-fixed": "#00201d",
+                        "tertiary-fixed": "#79f7ea",
+                        "on-primary-fixed-variant": "#00468b",
+                        "error": "#ffb4ab",
+                        "surface-container-high": "#2a2a2d",
+                        "outline": "#8b919f",
+                        "tertiary-fixed-dim": "#5adace",
+                        "on-primary-fixed": "#001b3d",
+                        "error-container": "#93000a",
+                        "inverse-surface": "#e5e1e5",
+                        "surface-bright": "#39393c",
+                        "inverse-primary": "#005db6",
+                        "on-surface-variant": "#c1c6d6",
+                        "secondary": "#ffb4ab",
+                        "on-secondary": "#690005",
+                        "on-primary": "#003063",
+                        "on-tertiary-fixed-variant": "#00504a",
+                        "surface-container-lowest": "#0e0e11",
+                        "on-primary-container": "#002957",
+                        "on-surface": "#e5e1e5",
+                        "on-tertiary": "#003733",
+                        "secondary-fixed-dim": "#ffb4ab",
+                        "on-secondary-fixed": "#410002",
+                        "primary-fixed-dim": "#a9c7ff",
+                        "on-tertiary-container": "#00302c",
+                        "surface": "#131316",
+                        "background": "#131316",
+                        "on-secondary-container": "#ffe7e4",
+                        "surface-variant": "#353438",
+                        "surface-container-low": "#1c1b1e",
+                        "tertiary": "#5adace",
+                        "on-error-container": "#ffdad6",
+                        "surface-container-highest": "#353438",
+                        "outline-variant": "#414753",
+                        "primary-container": "#3b90ff",
+                        "tertiary-container": "#00a297",
+                        "secondary-fixed": "#ffdad6",
+                        "secondary-container": "#d70016",
+                        "primary": "#a9c7ff",
+                        "on-error": "#690005",
+                        "on-background": "#e5e1e5",
+                        "primary-fixed": "#d6e3ff",
+                        "on-secondary-fixed-variant": "#93000b",
+                        "inverse-on-surface": "#313033"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Rajdhani", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Share Tech Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #050507;
+            background-image: 
+                linear-gradient(rgba(46, 140, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(46, 140, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .clipped-corner {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .radar-grid {
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-[#050507]/60 backdrop-blur-xl border-b-[0.5px] border-blue-500/20 shadow-[0_0_20px_rgba(46,140,255,0.15)]">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-surface-container-highest border border-primary/30 flex items-center justify-center">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="Cybernetic portrait of a high-rank hunter with glowing blue eye augmentations and dark futuristic tactical gear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnUyPDTZhaFMxDbEs0Qncuu55LQ8-TCLCY2AzpNqC7oltvO1f5uZKllQXtVyacM5GKCdyCnXQ7ZHhl1HO1eh5ui0hlWoW9kRGvL6Tgij274exVJpqbuZ8kp1Q3A1cM5Pcq5amVHL9wIBJILaYvZZdMQTIlgY2hMJz8cFM37hcOTgfDe1hunCSGm8JEu0GO3RXwrYA6eqjueisxy90vMkFzT3IyJOzr526IHs49VqZL4NWhxsnlhFgcdcYOWwHmslGPxDfCIzTTsHA"/>
+</div>
+<h1 class="font-['Rajdhani'] uppercase tracking-widest font-bold text-blue-500">SYSTEM STATUS</h1>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex gap-8">
+<span class="text-slate-500 font-['Rajdhani'] uppercase tracking-widest text-sm hover:text-blue-300 transition-colors cursor-pointer">STATUS</span>
+<span class="text-slate-500 font-['Rajdhani'] uppercase tracking-widest text-sm hover:text-blue-300 transition-colors cursor-pointer">QUESTS</span>
+<span class="text-blue-400 font-bold font-['Rajdhani'] uppercase tracking-widest text-sm cursor-pointer">STATS</span>
+<span class="text-slate-500 font-['Rajdhani'] uppercase tracking-widest text-sm hover:text-blue-300 transition-colors cursor-pointer">CONFIG</span>
+</nav>
+<span class="material-symbols-outlined text-blue-500">sensors</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-7xl mx-auto min-h-screen">
+<!-- Header Section -->
+<div class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<p class="font-label text-primary text-sm tracking-widest mb-2">EVOLUTION LOG // REVISION 4.08</p>
+<h2 class="font-headline text-5xl font-bold uppercase tracking-tighter text-on-surface">Historical Data</h2>
+</div>
+<div class="flex gap-2">
+<button class="px-6 py-2 bg-surface-container-high text-xs font-label text-slate-400 border-b-2 border-transparent hover:border-primary transition-all">WEEKLY</button>
+<button class="px-6 py-2 bg-primary/10 text-xs font-label text-primary border-b-2 border-primary">MONTHLY</button>
+<button class="px-6 py-2 bg-surface-container-high text-xs font-label text-slate-400 border-b-2 border-transparent hover:border-primary transition-all">YEARLY</button>
+</div>
+</div>
+<!-- Stats Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Primary Charts -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Main Historical Chart Card -->
+<div class="bg-surface-container-low/40 backdrop-blur-md p-8 border-l-4 border-primary relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 font-label text-8xl pointer-events-none select-none">LOG</div>
+<div class="flex justify-between items-start mb-12">
+<h3 class="font-headline text-xl font-bold uppercase tracking-widest">Growth Vector Analysis</h3>
+<div class="flex gap-4 font-label text-[10px]">
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-primary"></span> STR</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-tertiary"></span> APT</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-secondary"></span> INT</span>
+</div>
+</div>
+<!-- Simplified Historical Chart Visualization -->
+<div class="relative h-64 w-full flex items-end justify-between gap-1 border-b border-outline-variant/30">
+<!-- Chart Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+<div class="border-t border-outline-variant/10 w-full h-0"></div>
+<div class="border-t border-outline-variant/10 w-full h-0"></div>
+<div class="border-t border-outline-variant/10 w-full h-0"></div>
+<div class="border-t border-outline-variant/10 w-full h-0"></div>
+</div>
+<!-- Stepped Chart Bars (Representing progression points) -->
+<div class="relative flex-1 h-full flex flex-col justify-end group/bar">
+<div class="w-full bg-primary/20 hover:bg-primary/40 transition-all cursor-crosshair h-[40%] relative">
+<div class="absolute top-0 left-0 w-full h-0.5 bg-primary"></div>
+</div>
+<div class="absolute -bottom-6 left-0 right-0 text-center font-label text-[10px] text-slate-500">01</div>
+</div>
+<div class="relative flex-1 h-full flex flex-col justify-end group/bar">
+<div class="w-full bg-primary/20 hover:bg-primary/40 transition-all cursor-crosshair h-[45%] relative">
+<div class="absolute top-0 left-0 w-full h-0.5 bg-primary"></div>
+</div>
+<div class="absolute -bottom-6 left-0 right-0 text-center font-label text-[10px] text-slate-500">05</div>
+</div>
+<div class="relative flex-1 h-full flex flex-col justify-end group/bar">
+<div class="w-full bg-primary/20 hover:bg-primary/40 transition-all cursor-crosshair h-[65%] relative">
+<div class="absolute top-0 left-0 w-full h-0.5 bg-primary shadow-[0_-4px_10px_rgba(46,140,255,0.5)]"></div>
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary text-on-primary px-2 py-0.5 text-[10px] font-label opacity-0 group-hover/bar:opacity-100 transition-opacity">LVL UP</div>
+</div>
+<div class="absolute -bottom-6 left-0 right-0 text-center font-label text-[10px] text-slate-500">10</div>
+</div>
+<div class="relative flex-1 h-full flex flex-col justify-end group/bar">
+<div class="w-full bg-primary/20 hover:bg-primary/40 transition-all cursor-crosshair h-[62%] relative">
+<div class="absolute top-0 left-0 w-full h-0.5 bg-primary"></div>
+</div>
+<div class="absolute -bottom-6 left-0 right-0 text-center font-label text-[10px] text-slate-500">15</div>
+</div>
+<div class="relative flex-1 h-full flex flex-col justify-end group/bar">
+<div class="w-full bg-primary/20 hover:bg-primary/40 transition-all cursor-crosshair h-[75%] relative">
+<div class="absolute top-0 left-0 w-full h-0.5 bg-primary"></div>
+</div>
+<div class="absolute -bottom-6 left-0 right-0 text-center font-label text-[10px] text-slate-500">20</div>
+</div>
+<div class="relative flex-1 h-full flex flex-col justify-end group/bar">
+<div class="w-full bg-primary/20 hover:bg-primary/40 transition-all cursor-crosshair h-[85%] relative">
+<div class="absolute top-0 left-0 w-full h-0.5 bg-primary shadow-[0_-4px_10px_rgba(46,140,255,0.5)]"></div>
+</div>
+<div class="absolute -bottom-6 left-0 right-0 text-center font-label text-[10px] text-slate-500">25</div>
+</div>
+<div class="relative flex-1 h-full flex flex-col justify-end group/bar">
+<div class="w-full bg-primary/20 hover:bg-primary/40 transition-all cursor-crosshair h-[95%] relative">
+<div class="absolute top-0 left-0 w-full h-0.5 bg-primary"></div>
+</div>
+<div class="absolute -bottom-6 left-0 right-0 text-center font-label text-[10px] text-slate-500">30</div>
+</div>
+</div>
+</div>
+<!-- Secondary Stat Mini-Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-high p-6 border-t-2 border-primary/20">
+<p class="font-label text-[10px] text-primary/60 uppercase tracking-widest mb-2">Peak Endurance</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline text-3xl font-bold">142</span>
+<span class="font-label text-xs text-tertiary">+12.4%</span>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 border-t-2 border-primary/20">
+<p class="font-label text-[10px] text-primary/60 uppercase tracking-widest mb-2">Sync Probability</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline text-3xl font-bold">88.4</span>
+<span class="font-label text-xs text-primary">STABLE</span>
+</div>
+</div>
+<div class="bg-surface-container-high p-6 border-t-2 border-secondary/20">
+<p class="font-label text-[10px] text-secondary/60 uppercase tracking-widest mb-2">Penalty Risk</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline text-3xl font-bold text-secondary">0.02</span>
+<span class="font-label text-xs text-secondary">LOW</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Radar and HUD Metrics -->
+<div class="lg:col-span-4 space-y-8">
+<!-- Holographic Radar Card -->
+<div class="bg-[#050507] border border-primary/20 clipped-corner p-8 flex flex-col items-center justify-center relative min-h-[400px]">
+<div class="absolute top-4 left-4 font-label text-[10px] text-primary/40 uppercase">Aptitude Geometry</div>
+<!-- Radar Chart Visual -->
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- Outer Polygons -->
+<div class="absolute inset-0 border border-primary/10 radar-grid scale-100"></div>
+<div class="absolute inset-0 border border-primary/20 radar-grid scale-75"></div>
+<div class="absolute inset-0 border border-primary/30 radar-grid scale-50"></div>
+<!-- Active Data Polygon -->
+<div class="absolute inset-0 bg-primary/20 radar-grid scale-[0.8] border-2 border-primary animate-pulse"></div>
+<!-- Axis Labels -->
+<div class="absolute -top-6 font-label text-[10px] text-on-surface">STR</div>
+<div class="absolute top-1/4 -right-10 font-label text-[10px] text-on-surface">APT</div>
+<div class="absolute -bottom-6 right-4 font-label text-[10px] text-on-surface">INT</div>
+<div class="absolute -bottom-6 left-4 font-label text-[10px] text-on-surface">END</div>
+<div class="absolute top-1/4 -left-10 font-label text-[10px] text-on-surface">SPD</div>
+</div>
+<div class="mt-12 w-full space-y-3">
+<div class="flex justify-between items-center border-b border-outline-variant/10 pb-1">
+<span class="font-label text-xs text-slate-500 uppercase">Balance Coefficient</span>
+<span class="font-label text-xs text-primary">0.892</span>
+</div>
+<div class="flex justify-between items-center border-b border-outline-variant/10 pb-1">
+<span class="font-label text-xs text-slate-500 uppercase">Class Efficiency</span>
+<span class="font-label text-xs text-primary">S-TIER</span>
+</div>
+</div>
+</div>
+<!-- Technical Log Feed -->
+<div class="space-y-4">
+<h4 class="font-headline text-sm font-bold uppercase tracking-widest text-primary/80 px-2 border-l-2 border-primary">System Notifications</h4>
+<div class="space-y-2">
+<div class="p-3 bg-surface-container-lowest border-r-2 border-tertiary/40">
+<p class="font-label text-[10px] text-tertiary mb-1">[UPDATE] Intelligence +1</p>
+<p class="font-body text-[11px] text-slate-400">Achieved after 'Night Walker' hidden quest completion.</p>
+</div>
+<div class="p-3 bg-surface-container-lowest border-r-2 border-primary/40">
+<p class="font-label text-[10px] text-primary mb-1">[LOG] Strength Threshold</p>
+<p class="font-body text-[11px] text-slate-400">Current power output exceeds previous peak by 14%.</p>
+</div>
+<div class="p-3 bg-surface-container-lowest border-r-2 border-outline-variant/40">
+<p class="font-label text-[10px] text-slate-500 mb-1">[SYNC] Database Update</p>
+<p class="font-body text-[11px] text-slate-500">Historical data synchronized with Global Hunter Net.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Call to Action Section -->
+<div class="mt-12 flex justify-center">
+<button class="clipped-corner bg-primary text-on-primary font-headline font-bold uppercase tracking-widest px-12 py-4 hover:shadow-[0_0_30px_rgba(46,140,255,0.4)] transition-all active:scale-95 group">
+                Initialize Deep Scan 
+                <span class="material-symbols-outlined align-middle ml-2 group-hover:translate-x-1 transition-transform">shutter_speed</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-4 py-3 pb-safe bg-[#050507]/80 backdrop-blur-2xl border-t-[0.5px] border-blue-500/30 shadow-[0_-10px_30px_rgba(46,140,255,0.1)]">
+<div class="flex flex-col items-center justify-center text-slate-700 opacity-50 hover:opacity-100 hover:text-blue-200 transition-all cursor-pointer">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter uppercase">STATUS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-700 opacity-50 hover:opacity-100 hover:text-blue-200 transition-all cursor-pointer">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter uppercase">QUESTS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-blue-400 drop-shadow-[0_0_8px_rgba(46,140,255,0.8)] border-t-2 border-blue-500 cursor-pointer">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">query_stats</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter uppercase">STATS</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-700 opacity-50 hover:opacity-100 hover:text-blue-200 transition-all cursor-pointer">
+<span class="material-symbols-outlined">settings_suggest</span>
+<span class="font-['Share_Tech_Mono'] text-[10px] tracking-tighter uppercase">CONFIG</span>
+</div>
+</nav>
+</body></html>
