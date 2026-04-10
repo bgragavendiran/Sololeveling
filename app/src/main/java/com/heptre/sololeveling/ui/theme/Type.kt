@@ -6,29 +6,87 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
+// Custom Typography from PRD
+val Rajdhani = FontFamily(
+    Font(
+        FontWeight.Normal,
+        android.graphics.fonts.FontFamily.Default,
+        null
+    )
+)
+
+val ShareTechMono = FontFamily(
+    Font(
+        FontWeight.Normal,
+        android.graphics.fonts.FontFamily.Default,
+        null
+    )
+)
+
+val Outfit = FontFamily(
+    Font(
+        FontWeight.Normal,
+        android.graphics.fonts.FontFamily.Default,
+        null
+    )
+)
+
+// Typography styles based on PRD specifications
 val Typography = Typography(
+    // Headings/Numbers: Rajdhani, 700, 24-48px (Ranks, Timers, Big Stats)
+    displayLarge = TextStyle(
+        fontFamily = Rajdhani,
+        fontWeight = FontWeight.Bold,
+        fontSize = 48.sp,
+        lineHeight = 56.sp,
+        letterSpacing = 0.sp
+    ),
+    displayMedium = TextStyle(
+        fontFamily = Rajdhani,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp,
+        lineHeight = 44.sp,
+        letterSpacing = 0.sp
+    ),
+    displaySmall = TextStyle(
+        fontFamily = Rajdhani,
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+        letterSpacing = 0.sp
+    ),
+
+    // System Alerts: Share Tech Mono, 400, 12-14px (Metadata, Logs, Timestamps)
+    labelLarge = TextStyle(
+        fontFamily = ShareTechMono,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelMedium = TextStyle(
+        fontFamily = ShareTechMono,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.25.sp
+    ),
+
+    // Body: Outfit, 400, 16px (Quest descriptions, readable text)
     bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = Outfit,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
     ),
+
+    // Buttons: Rajdhani, 600, 16px, ALL CAPS, 2px letter-spacing
     labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
+        fontFamily = Rajdhani,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 2.sp
     )
-    */
 )
