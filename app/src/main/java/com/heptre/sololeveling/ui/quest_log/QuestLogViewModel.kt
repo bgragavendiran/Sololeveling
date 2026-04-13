@@ -2,93 +2,92 @@ package com.heptre.sololeveling.ui.quest_log
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.heptre.sololeveling.data.Quest
+import com.heptre.sololeveling.data.StatType
+import com.heptre.sololeveling.data.db.PlayerDao
+import com.heptre.sololeveling.data.db.QuestDao
+import com.heptre.sololeveling.data.db.QuestEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class QuestLogViewModel : ViewModel() {
-    private val _dailyQuests = MutableStateFlow<List<Quest>>(emptyList())
-    val dailyQuests: StateFlow<List<Quest>> = _dailyQuests.asStateFlow()
+class QuestLogViewModel(
+    private val questDao: QuestDao,
+    private val playerDao: PlayerDao
+) : ViewModel() {
 
-    private val _isLoading = MutableStateFlow(false)
+    private val _dailyQuests = MutableStateFlow<List<QuestEntity>>(emptyList())
+    val dailyQuests: StateFlow<List<QuestEntity>> = _dailyQuests.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    fun loadDailyQuests() {
+    init {
+        loadDailyQuests()
+    }
+
+    private fun loadDailyQuests() {
         viewModelScope.launch {
-            _isLoading.value = true
-            // Simulate API call
-            Thread.sleep(500)
-            _dailyQuests.value = listOf(
-                Quest(
-                    id = 1,
-                    title = "Cardio Workout",
-                    description = "30 minutes of cardio",
-                    statType = com.heptre.sololeveling.data.Quest.StatType.STRENGTH,
-                    reward = 2,
-                    isCompleted = false
-                ),
-                Quest(
-                    id = 2,
-                    title = "Strength Training",
-                    description = "Heavy lifting session",
-                    statType = com.heptre.sololeveling.data.Quest.StatType.STRENGTH,
-                    reward = 3,
-                    isCompleted = false
-                ),
-                Quest(
-                    id = 3,
-                    title = "Deep Work Session",
-                    description = "Focus on learning task",
-                    statType = com.heptre.sololeveling.data.Quest.StatType.APPTITUDE,
-                    reward = 5,
-                    isCompleted = false
-                ),
-                Quest(
-                    id = 4,
-                    title = "Read 30 Pages",
-                    description = "Study a new topic",
-                    statType = com.heptre.sololeveling.data.Quest.StatType.INTELLIGENCE,
-                    reward = 2,
-                    isCompleted = false
-                ),
-                Quest(
-                    id = 5,
-                    title = "Sleep Sync",
-                    description = "Sync with Pixel Watch",
-                    statType = com.heptre.sololeveling.data.Quest.StatType.ENDURANCE,
-                    reward = 0,
-                    isAutoSync = true
-                )
+            questDao.getActiveQuests().collect { quests ->
+                _dailyQuests.value = quests
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun addCustomQuest(title: String, description: String, statType: StatType, reward: Int) {
+        viewModelScope.launch {
+            val quest = QuestEntity(
+                title = title,
+                description = description,
+                statType = statType,
+                reward = reward,
+                isCompleted = false,
+                isAutoSync = false,
+                isSkipped = false,
+                createdDate = System.currentTimeMillis(),
+                lastUpdatedDate = System.currentTimeMillis()
             )
-            _isLoading.value = false
+            questDao.insertQuest(quest)
         }
     }
 
-    fun toggleQuestCompletion(quest: Quest) {
+    fun toggleQuestCompletion(quest: QuestEntity) {
         viewModelScope.launch {
-            val updatedQuests = _dailyQuests.value.map { currentQuest ->
-                if (currentQuest.id == quest.id) {
-                    currentQuest.copy(isCompleted = !currentQuest.isCompleted)
-                } else {
-                    currentQuest
+            val newIsCompleted = !quest.isCompleted
+            questDao.updateQuest(quest.copy(
+                isCompleted = newIsCompleted,
+                lastUpdatedDate = System.currentTimeMillis()
+            ))
+
+            if(newIsCompleted) {
+                // Award points
+                when(quest.statType) {
+                    StatType.STRENGTH -> playerDao.addStrength(quest.reward)
+                    StatType.APPTITUDE -> playerDao.addAptitude(quest.reward)
+                    StatType.INTELLIGENCE -> playerDao.addIntelligence(quest.reward)
+                    StatType.ENDURANCE -> playerDao.addEndurance(quest.reward)
+                }
+            } else {
+                // Remove points
+                when(quest.statType) {
+                    StatType.STRENGTH -> playerDao.addStrength(-quest.reward)
+                    StatType.APPTITUDE -> playerDao.addAptitude(-quest.reward)
+                    StatType.INTELLIGENCE -> playerDao.addIntelligence(-quest.reward)
+                    StatType.ENDURANCE -> playerDao.addEndurance(-quest.reward)
                 }
             }
-            _dailyQuests.value = updatedQuests
         }
     }
 
-    fun skipQuest(quest: Quest) {
+    fun skipQuest(quest: QuestEntity) {
         viewModelScope.launch {
-            val updatedQuests = _dailyQuests.value.map { currentQuest ->
-                if (currentQuest.id == quest.id) {
-                    currentQuest.copy(isCompleted = false, isSkipped = true)
-                } else {
-                    currentQuest
-                }
-            }
-            _dailyQuests.value = updatedQuests
+            questDao.updateQuest(quest.copy(
+                isSkipped = true,
+                lastUpdatedDate = System.currentTimeMillis()
+            ))
+            // Spending gold to skip
+            playerDao.spendGold(100)
         }
     }
 }

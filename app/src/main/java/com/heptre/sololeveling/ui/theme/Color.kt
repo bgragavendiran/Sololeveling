@@ -10,11 +10,10 @@ val FrostWhite = Color(0xFFE2E8F0)  // Text: Frost White
 val Slate = Color(0xFF475569)       // Muted: Slate
 val PenaltyRed = Color(0xFFFF2E2E)  // Accent: Penalty Red
 val ShadowPurple = Color(0xFFB829DF) // Secondary Accent: Shadow Purple
+val TertiaryRecovery = Color(0xFF5ADACE) // Tertiary: Recovery
+val PrimaryContainer = Color(0xFF3B90FF) // Gradients
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
-
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Additional system hues
+val SurfaceContainerHighest = Color(0xFF353438)
+val SurfaceContainerLowest = Color(0xFF0E0E11)
+val SurfaceDim = Color(0xFF131316)

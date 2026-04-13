@@ -3,53 +3,44 @@ package com.heptre.sololeveling.ui.rank_evaluation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.heptre.sololeveling.data.Rank
+import com.heptre.sololeveling.data.db.PlayerDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class RankEvaluationViewModel : ViewModel() {
-    private val _currentRank = MutableStateFlow(Rank.J)
+class RankEvaluationViewModel(private val playerDao: PlayerDao) : ViewModel() {
+    private val _currentRank = MutableStateFlow(Rank.UNRANKED)
     val currentRank: StateFlow<Rank> = _currentRank.asStateFlow()
+
+    private val _nextRank = MutableStateFlow<Rank?>(Rank.J)
+    val nextRank: StateFlow<Rank?> = _nextRank.asStateFlow()
 
     private val _progress = MutableStateFlow(0f)
     val progress: StateFlow<Float> = _progress.asStateFlow()
 
-    private val _nextRank = MutableStateFlow<Rank?>(null)
-    val nextRank: StateFlow<Rank?> = _nextRank.asStateFlow()
-
-    fun evaluateRank(rank: Rank) {
+    init {
         viewModelScope.launch {
-            _currentRank.value = rank
-            _progress.value = when (rank) {
-                Rank.UNRANKED -> 0f
-                Rank.J -> 0.1f
-                Rank.I -> 0.2f
-                Rank.H -> 0.3f
-                Rank.G -> 0.4f
-                Rank.F -> 0.5f
-                Rank.E -> 0.6f
-                Rank.D -> 0.7f
-                Rank.C -> 0.8f
-                Rank.B -> 0.9f
-                Rank.A -> 1.0f
-                Rank.S -> 1.0f
-            }
+            playerDao.getPlayerState().collect { player ->
+                if (player != null) {
+                    _currentRank.value = player.rank
+                    
+                    // Basic progression logic based on rank indexing
+                    val ranks = Rank.values()
+                    val rankIndex = ranks.indexOf(player.rank)
+                    
+                    if (rankIndex < ranks.lastIndex) {
+                        _nextRank.value = ranks[rankIndex + 1]
+                    } else {
+                        _nextRank.value = null // Reached max rank
+                    }
 
-            // Determine next rank
-            _nextRank.value = when (rank) {
-                Rank.UNRANKED -> Rank.J
-                Rank.J -> Rank.I
-                Rank.I -> Rank.H
-                Rank.H -> Rank.G
-                Rank.G -> Rank.F
-                Rank.F -> Rank.E
-                Rank.E -> Rank.D
-                Rank.D -> Rank.C
-                Rank.C -> Rank.B
-                Rank.B -> Rank.A
-                Rank.A -> Rank.S
-                Rank.S -> null
+                    // For now simulate progress based on cycles logic
+                    val cycleDurationMs = 21L * 24 * 60 * 60 * 1000
+                    val timePassed = System.currentTimeMillis() - player.cycleStartDate
+                    val ratio = (timePassed.toFloat() / cycleDurationMs).coerceIn(0f, 1f)
+                    _progress.value = ratio
+                }
             }
         }
     }

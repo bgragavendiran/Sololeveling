@@ -7,29 +7,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 // Custom Typography from PRD
-val Rajdhani = FontFamily(
-    Font(
-        FontWeight.Normal,
-        android.graphics.fonts.FontFamily.Default,
-        null
-    )
-)
-
-val ShareTechMono = FontFamily(
-    Font(
-        FontWeight.Normal,
-        android.graphics.fonts.FontFamily.Default,
-        null
-    )
-)
-
-val Outfit = FontFamily(
-    Font(
-        FontWeight.Normal,
-        android.graphics.fonts.FontFamily.Default,
-        null
-    )
-)
+// Using default font families since no font resources are bundled yet.
+// Replace with actual font resources (e.g. R.font.rajdhani) when available.
+val Rajdhani = FontFamily.Default
+val ShareTechMono = FontFamily.Monospace
+val Outfit = FontFamily.SansSerif
 
 // Typography styles based on PRD specifications
 val Typography = Typography(

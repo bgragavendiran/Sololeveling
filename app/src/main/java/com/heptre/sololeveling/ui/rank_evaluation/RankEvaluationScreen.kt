@@ -1,10 +1,10 @@
 package com.heptre.sololeveling.ui.rank_evaluation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,231 +12,155 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.heptre.sololeveling.data.Rank
+import androidx.compose.ui.unit.sp
 import com.heptre.sololeveling.ui.theme.*
 
 @Composable
 fun RankEvaluationScreen(viewModel: RankEvaluationViewModel) {
     val currentRank by viewModel.currentRank.collectAsState()
-    val progress by viewModel.progress.collectAsState()
     val nextRank by viewModel.nextRank.collectAsState()
+    
+    // Stub values for the UI PRD requirement
+    val nextRankStr = nextRank?.name ?: "B"
 
-    Scaffold(
-        topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(VoidBlack)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Text(
-                    text = "RANK EVALUATION",
-                    color = SystemBlue,
-                    fontSize = 14.sp,
-                    fontFamily = ShareTechMono,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
-    ) { paddingValues ->
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(VoidBlack)
+    ) {
+        // Decorative background grid
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(VoidBlack)
-                .padding(paddingValues)
+                .background(Color.Black.copy(alpha = 0.5f)) // Simulate grid/scanlines
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // System Message Badge
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .border(1.dp, SystemBlue)
+                    .padding(horizontal = 16.dp, vertical = 6.dp)
             ) {
-                Spacer(modifier = Modifier.height(32.dp))
+                Text("SYSTEM MESSAGE", color = SystemBlue, fontSize = 12.sp, fontFamily = ShareTechMono)
+            }
 
-                // Current Rank Display
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Title
+            Text("EVALUATION COMPLETE", color = FrostWhite, fontSize = 32.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold, modifier = Modifier.neonGlow(SystemBlue.copy(alpha = 0.3f), 5.dp))
+            Text("Cycle 04 Finalized", color = Slate, fontSize = 14.sp, fontFamily = ShareTechMono, letterSpacing = 1.sp)
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Rank Transition
+            Text("PROMOTION ACHIEVED", color = SystemBlue, fontSize = 14.sp, fontFamily = ShareTechMono, letterSpacing = 2.sp)
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "CURRENT RANK",
+                    text = "${currentRank.name}-RANK",
                     color = Slate,
-                    fontSize = 14.sp,
-                    fontFamily = ShareTechMono,
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    fontSize = 32.sp,
+                    fontFamily = Rajdhani,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough
                 )
-
-                RankBadge(rank = currentRank)
-
-                Spacer(modifier = Modifier.height(48.dp))
-
-                // Progress Bar
-                Text(
-                    text = "PROGRESS TO NEXT RANK",
-                    color = Slate,
-                    fontSize = 14.sp,
-                    fontFamily = ShareTechMono,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                ProgressSection(progress = progress)
-
-                Spacer(modifier = Modifier.height(48.dp))
-
-                // Next Rank Info
-                nextRank?.let { next ->
+                Spacer(modifier = Modifier.width(24.dp))
+                Text("→", color = SystemBlue, fontSize = 32.sp)
+                Spacer(modifier = Modifier.width(24.dp))
+                Box(contentAlignment = Alignment.Center) {
                     Text(
-                        text = "NEXT RANK: ${next.name}",
-                        color = when (next) {
-                            Rank.S -> SystemBlue
-                            else -> FrostWhite
-                        },
-                        fontSize = 20.sp,
-                        fontFamily = Rajdhani,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    
-                    Text(
-                        text = "Requirements: Complete 21-day cycle",
-                        color = Slate,
-                        fontSize = 14.sp,
-                        fontFamily = Outfit,
-                        textAlign = TextAlign.Center
-                    )
-                } ?: run {
-                    Text(
-                        text = "CONGRATULATIONS!",
-                        color = ShadowPurple,
-                        fontSize = 32.sp,
-                        fontFamily = Rajdhani,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    
-                    Text(
-                        text = "You have reached the pinnacle of the system.",
+                        text = "$nextRankStr-RANK",
                         color = FrostWhite,
-                        fontSize = 16.sp,
-                        fontFamily = Outfit,
-                        textAlign = TextAlign.Center
-                    )
-                    
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    Text(
-                        text = "SHADOW MONARCH TITLE UNLOCKED",
-                        color = ShadowPurple,
-                        fontSize = 24.sp,
+                        fontSize = 48.sp,
                         fontFamily = Rajdhani,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.neonGlow(SystemBlue, 15.dp)
                     )
                 }
-
-                Spacer(modifier = Modifier.height(48.dp))
-
-                // 21-Day Cycle Info
-                Text(
-                    text = "21-DAY CYCLE",
-                    color = Slate,
-                    fontSize = 14.sp,
-                    fontFamily = ShareTechMono,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-
-                CycleInfo()
-
-                Spacer(modifier = Modifier.height(32.dp))
             }
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Consistency Card
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .hudGlass()
+                    .border(1.dp, SystemBlue)
+                    .padding(24.dp)
+            ) {
+                Column {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("CONSISTENCY RATE", color = Slate, fontSize = 12.sp, fontFamily = ShareTechMono)
+                        Text("92%", color = SystemBlue, fontSize = 16.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Box(modifier = Modifier.fillMaxWidth().height(4.dp).background(Obsidian)) {
+                        Box(modifier = Modifier.fillMaxWidth(0.92f).fillMaxHeight().background(SystemBlue))
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("Quests: 61/63", color = FrostWhite, fontSize = 14.sp, fontFamily = ShareTechMono)
+                        Text("Penalties: 0", color = FrostWhite, fontSize = 14.sp, fontFamily = ShareTechMono)
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Attribute Adjustments
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                AttributeBox(title = "STR", value = "+15")
+                AttributeBox(title = "APT", value = "+10")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                AttributeBox(title = "INT", value = "+5")
+                AttributeBox(title = "END", value = "+8")
+            }
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // CTA
+            Button(
+                onClick = { /* Claim New Rank logic and navigate */ },
+                shape = ClippedCornerShape(20f),
+                modifier = Modifier.fillMaxWidth().height(64.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = SystemBlue),
+                border = androidx.compose.foundation.BorderStroke(1.dp, SystemBlue)
+            ) {
+                Text("CLAIM NEW RANK", fontSize = 18.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold, letterSpacing = 2.sp, modifier = Modifier.neonGlow(SystemBlue, 5.dp))
+            }
+            
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
 
 @Composable
-fun RankBadge(rank: Rank) {
+fun RowScope.AttributeBox(title: String, value: String) {
     Box(
         modifier = Modifier
-            .size(120.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .background(Obsidian.copy(alpha = 0.8f))
-            .border(2.dp, when (rank) {
-                Rank.S -> SystemBlue
-                else -> SystemBlue
-            }, RoundedCornerShape(4.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = rank.name,
-            color = when (rank) {
-                Rank.S -> SystemBlue
-                else -> FrostWhite
-            },
-            fontSize = 28.sp,
-            fontFamily = Rajdhani,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
-    }
-}
-
-@Composable
-fun ProgressSection(progress: Float) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(24.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .background(Obsidian.copy(alpha = 0.6f))
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth(fraction = progress)
-                .height(24.dp)
-                .clip(RoundedCornerShape(4.dp))
-                .background(
-                    color = if (progress >= 1f) ShadowPurple else SystemBlue
-                )
-        )
-
-        Text(
-            text = "${(progress * 100).toInt()}%",
-            color = FrostWhite,
-            fontSize = 12.sp,
-            fontFamily = ShareTechMono,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
-fun CycleInfo() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(Obsidian.copy(alpha = 0.6f))
+            .weight(1f)
+            .background(Obsidian)
+            .border(1.dp, Color(0xFF1A2235))
             .padding(16.dp)
     ) {
-        Text(
-            text = "CYCLE TRACKING",
-            color = SystemBlue,
-            fontSize = 14.sp,
-            fontFamily = ShareTechMono,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
-
-        Text(
-            text = "21-day cycles determine rank progression.\n\n" +
-                   "• Complete daily quests\n" +
-                   "• Maintain streaks\n" +
-                   "• Avoid system penalties\n" +
-                   "• Contribute to your growth",
-            color = FrostWhite,
-            fontSize = 14.sp,
-            fontFamily = Outfit,
-            lineHeight = 24.sp
-        )
+        Column {
+            Text(title, color = Slate, fontSize = 12.sp, fontFamily = ShareTechMono)
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(value, color = SystemBlue, fontSize = 24.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
+        }
     }
 }
