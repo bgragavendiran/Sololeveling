@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.heptre.sololeveling.data.StatType
 import com.heptre.sololeveling.data.db.PlayerDao
+import com.heptre.sololeveling.data.db.PlayerEntity
 import com.heptre.sololeveling.data.db.QuestDao
 import com.heptre.sololeveling.data.db.QuestEntity
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,15 +23,44 @@ class QuestLogViewModel(
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    private val _playerState = MutableStateFlow<PlayerEntity?>(null)
+    val playerState: StateFlow<PlayerEntity?> = _playerState.asStateFlow()
+
+    // 0–100 representing quest completion % for today's active list
+    private val _syncRate = MutableStateFlow(0)
+    val syncRate: StateFlow<Int> = _syncRate.asStateFlow()
+
+    // Computed "level" from total stat points
+    private val _level = MutableStateFlow(1)
+    val level: StateFlow<Int> = _level.asStateFlow()
+
     init {
         loadDailyQuests()
+        loadPlayerState()
     }
 
     private fun loadDailyQuests() {
         viewModelScope.launch {
-            questDao.getActiveQuests().collect { quests ->
-                _dailyQuests.value = quests
+            questDao.getAllQuests().collect { allQuests ->
+                val active = allQuests.filter { !it.isSkipped }
+                _dailyQuests.value = active.filter { !it.isCompleted }
+
+                val total = active.size
+                val completed = active.count { it.isCompleted }
+                _syncRate.value = if (total > 0) (completed * 100) / total else 0
+
                 _isLoading.value = false
+            }
+        }
+    }
+
+    private fun loadPlayerState() {
+        viewModelScope.launch {
+            playerDao.getPlayerState().collect { player ->
+                _playerState.value = player
+                if (player != null) {
+                    _level.value = ((player.str + player.apt + player.int + player.end) / 5).coerceAtLeast(1)
+                }
             }
         }
     }
@@ -60,17 +90,15 @@ class QuestLogViewModel(
                 lastUpdatedDate = System.currentTimeMillis()
             ))
 
-            if(newIsCompleted) {
-                // Award points
-                when(quest.statType) {
+            if (newIsCompleted) {
+                when (quest.statType) {
                     StatType.STRENGTH -> playerDao.addStrength(quest.reward)
                     StatType.APPTITUDE -> playerDao.addAptitude(quest.reward)
                     StatType.INTELLIGENCE -> playerDao.addIntelligence(quest.reward)
                     StatType.ENDURANCE -> playerDao.addEndurance(quest.reward)
                 }
             } else {
-                // Remove points
-                when(quest.statType) {
+                when (quest.statType) {
                     StatType.STRENGTH -> playerDao.addStrength(-quest.reward)
                     StatType.APPTITUDE -> playerDao.addAptitude(-quest.reward)
                     StatType.INTELLIGENCE -> playerDao.addIntelligence(-quest.reward)
@@ -86,7 +114,6 @@ class QuestLogViewModel(
                 isSkipped = true,
                 lastUpdatedDate = System.currentTimeMillis()
             ))
-            // Spending gold to skip
             playerDao.spendGold(100)
         }
     }

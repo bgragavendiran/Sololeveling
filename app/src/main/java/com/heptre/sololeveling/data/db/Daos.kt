@@ -12,6 +12,18 @@ interface PlayerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdatePlayer(player: PlayerEntity)
 
+    @Query("SELECT name FROM player_state WHERE id = 1")
+    suspend fun getPlayerName(): String?
+
+    @Query("UPDATE player_state SET name = :name WHERE id = 1")
+    suspend fun updatePlayerName(name: String)
+
+    @Query("UPDATE player_state SET rank = :rankName, cycleStartDate = :cycleStartDate WHERE id = 1")
+    suspend fun updateRankAndCycle(rankName: String, cycleStartDate: Long)
+
+    @Query("UPDATE player_state SET str = str + :str, apt = apt + :apt, `int` = `int` + :intel, `end` = `end` + :endur WHERE id = 1")
+    suspend fun addStats(str: Int, apt: Int, intel: Int, endur: Int)
+
     @Query("UPDATE player_state SET `apt` = `apt` + :amount WHERE id = 1")
     suspend fun addAptitude(amount: Int)
 
@@ -38,6 +50,12 @@ interface QuestDao {
 
     @Query("SELECT * FROM quests WHERE isCompleted = 0 AND isSkipped = 0")
     fun getActiveQuests(): Flow<List<QuestEntity>>
+
+    @Query("SELECT COUNT(*) FROM quests WHERE lastUpdatedDate >= :since AND isCompleted = 1")
+    suspend fun getCompletedQuestCountSince(since: Long): Int
+
+    @Query("SELECT COUNT(*) FROM quests WHERE createdDate >= :since")
+    suspend fun getTotalQuestCountSince(since: Long): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuest(quest: QuestEntity)

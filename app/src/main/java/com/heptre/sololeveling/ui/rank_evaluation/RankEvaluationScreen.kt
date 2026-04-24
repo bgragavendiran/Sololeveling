@@ -9,7 +9,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -17,24 +16,31 @@ import androidx.compose.ui.unit.sp
 import com.heptre.sololeveling.ui.theme.*
 
 @Composable
-fun RankEvaluationScreen(viewModel: RankEvaluationViewModel) {
+fun RankEvaluationScreen(
+    viewModel: RankEvaluationViewModel,
+    onRankClaimed: () -> Unit = {}
+) {
     val currentRank by viewModel.currentRank.collectAsState()
     val nextRank by viewModel.nextRank.collectAsState()
-    
-    // Stub values for the UI PRD requirement
-    val nextRankStr = nextRank?.name ?: "B"
+    val cycleStats by viewModel.cycleStats.collectAsState()
+    val cycleNumber by viewModel.cycleNumber.collectAsState()
+    val rankClaimed by viewModel.rankClaimed.collectAsState()
+
+    LaunchedEffect(rankClaimed) {
+        if (rankClaimed) onRankClaimed()
+    }
+
+    val nextRankLabel = nextRank?.name ?: currentRank.name
+    val isPromotion = cycleStats.consistencyPercent >= 66
+    val resultLabel = if (isPromotion) "PROMOTION ACHIEVED" else "DEMOTION INCURRED"
+    val resultColor = if (isPromotion) SystemBlue else PenaltyRed
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(VoidBlack)
     ) {
-        // Decorative background grid
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f)) // Simulate grid/scanlines
-        )
+        Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.5f)))
 
         Column(
             modifier = Modifier
@@ -56,16 +62,27 @@ fun RankEvaluationScreen(viewModel: RankEvaluationViewModel) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Title
-            Text("EVALUATION COMPLETE", color = FrostWhite, fontSize = 32.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold, modifier = Modifier.neonGlow(SystemBlue.copy(alpha = 0.3f), 5.dp))
-            Text("Cycle 04 Finalized", color = Slate, fontSize = 14.sp, fontFamily = ShareTechMono, letterSpacing = 1.sp)
+            Text(
+                "EVALUATION COMPLETE",
+                color = FrostWhite,
+                fontSize = 32.sp,
+                fontFamily = Rajdhani,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.neonGlow(SystemBlue.copy(alpha = 0.3f), 5.dp)
+            )
+            Text(
+                "Cycle $cycleNumber Finalized",
+                color = Slate,
+                fontSize = 14.sp,
+                fontFamily = ShareTechMono,
+                letterSpacing = 1.sp
+            )
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // Rank Transition
-            Text("PROMOTION ACHIEVED", color = SystemBlue, fontSize = 14.sp, fontFamily = ShareTechMono, letterSpacing = 2.sp)
+            Text(resultLabel, color = resultColor, fontSize = 14.sp, fontFamily = ShareTechMono, letterSpacing = 2.sp)
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = "${currentRank.name}-RANK",
@@ -76,18 +93,16 @@ fun RankEvaluationScreen(viewModel: RankEvaluationViewModel) {
                     textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough
                 )
                 Spacer(modifier = Modifier.width(24.dp))
-                Text("→", color = SystemBlue, fontSize = 32.sp)
+                Text("→", color = resultColor, fontSize = 32.sp)
                 Spacer(modifier = Modifier.width(24.dp))
-                Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = "$nextRankStr-RANK",
-                        color = FrostWhite,
-                        fontSize = 48.sp,
-                        fontFamily = Rajdhani,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.neonGlow(SystemBlue, 15.dp)
-                    )
-                }
+                Text(
+                    text = "$nextRankLabel-RANK",
+                    color = FrostWhite,
+                    fontSize = 48.sp,
+                    fontFamily = Rajdhani,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.neonGlow(resultColor, 15.dp)
+                )
             }
 
             Spacer(modifier = Modifier.height(48.dp))
@@ -97,22 +112,33 @@ fun RankEvaluationScreen(viewModel: RankEvaluationViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .hudGlass()
-                    .border(1.dp, SystemBlue)
+                    .border(1.dp, resultColor)
                     .padding(24.dp)
             ) {
                 Column {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("CONSISTENCY RATE", color = Slate, fontSize = 12.sp, fontFamily = ShareTechMono)
-                        Text("92%", color = SystemBlue, fontSize = 16.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
+                        Text(
+                            "${cycleStats.consistencyPercent}%",
+                            color = resultColor,
+                            fontSize = 16.sp,
+                            fontFamily = Rajdhani,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                     Box(modifier = Modifier.fillMaxWidth().height(4.dp).background(Obsidian)) {
-                        Box(modifier = Modifier.fillMaxWidth(0.92f).fillMaxHeight().background(SystemBlue))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth(cycleStats.consistencyPercent / 100f)
+                                .fillMaxHeight()
+                                .background(resultColor)
+                        )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Quests: 61/63", color = FrostWhite, fontSize = 14.sp, fontFamily = ShareTechMono)
-                        Text("Penalties: 0", color = FrostWhite, fontSize = 14.sp, fontFamily = ShareTechMono)
+                        Text("Quests: ${cycleStats.completedQuests}/${cycleStats.totalQuests}", color = FrostWhite, fontSize = 14.sp, fontFamily = ShareTechMono)
+                        Text("Penalties: ${cycleStats.penalties}", color = FrostWhite, fontSize = 14.sp, fontFamily = ShareTechMono)
                     }
                 }
             }
@@ -121,28 +147,34 @@ fun RankEvaluationScreen(viewModel: RankEvaluationViewModel) {
 
             // Attribute Adjustments
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                AttributeBox(title = "STR", value = "+15")
-                AttributeBox(title = "APT", value = "+10")
+                AttributeBox(title = "STR", value = "+${viewModel.rankBonuses["STR"] ?: 0}")
+                AttributeBox(title = "APT", value = "+${viewModel.rankBonuses["APT"] ?: 0}")
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                AttributeBox(title = "INT", value = "+5")
-                AttributeBox(title = "END", value = "+8")
+                AttributeBox(title = "INT", value = "+${viewModel.rankBonuses["INT"] ?: 0}")
+                AttributeBox(title = "END", value = "+${viewModel.rankBonuses["END"] ?: 0}")
             }
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // CTA
             Button(
-                onClick = { /* Claim New Rank logic and navigate */ },
+                onClick = { viewModel.claimNewRank() },
                 shape = ClippedCornerShape(20f),
                 modifier = Modifier.fillMaxWidth().height(64.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = SystemBlue),
-                border = androidx.compose.foundation.BorderStroke(1.dp, SystemBlue)
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = resultColor),
+                border = androidx.compose.foundation.BorderStroke(1.dp, resultColor)
             ) {
-                Text("CLAIM NEW RANK", fontSize = 18.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold, letterSpacing = 2.sp, modifier = Modifier.neonGlow(SystemBlue, 5.dp))
+                Text(
+                    "CLAIM NEW RANK",
+                    fontSize = 18.sp,
+                    fontFamily = Rajdhani,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 2.sp,
+                    modifier = Modifier.neonGlow(resultColor, 5.dp)
+                )
             }
-            
+
             Spacer(modifier = Modifier.height(32.dp))
         }
     }

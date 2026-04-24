@@ -44,7 +44,7 @@ abstract class SoloLevelingDatabase : RoomDatabase() {
                     playerDao?.insertOrUpdatePlayer(
                         PlayerEntity(
                             id = 1,
-                            name = "PLAYER",
+                            name = "",
                             title = "UNRANKED",
                             rank = Rank.UNRANKED,
                             goldCurrent = 0,

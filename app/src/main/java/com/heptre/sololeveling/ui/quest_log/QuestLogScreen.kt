@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.heptre.sololeveling.data.Quest
 import com.heptre.sololeveling.data.StatType
 import com.heptre.sololeveling.data.db.QuestEntity
 import com.heptre.sololeveling.ui.theme.*
@@ -29,8 +28,23 @@ import com.heptre.sololeveling.ui.theme.*
 fun QuestLogScreen(viewModel: QuestLogViewModel) {
     val dailyQuests by viewModel.dailyQuests.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val playerState by viewModel.playerState.collectAsState()
+    val syncRate by viewModel.syncRate.collectAsState()
+    val level by viewModel.level.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
-    
+
+    val rankLabel = playerState?.rank?.name?.let { "RANK $it" } ?: "RANK ?"
+    val syncStatus = when {
+        syncRate >= 80 -> "Recovery Optimal"
+        syncRate >= 50 -> "Sync Degraded"
+        else -> "Low Sync"
+    }
+    val syncColor = when {
+        syncRate >= 80 -> TertiaryRecovery
+        syncRate >= 50 -> SystemBlue
+        else -> PenaltyRed
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,12 +64,12 @@ fun QuestLogScreen(viewModel: QuestLogViewModel) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text("RANK B+", color = SystemBlue, fontSize = 24.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold, modifier = Modifier.neonGlow(SystemBlue.copy(alpha=0.5f), 5.dp))
-                    Text("Level 42 Hunter", color = FrostWhite, fontSize = 12.sp, fontFamily = ShareTechMono)
+                    Text(rankLabel, color = SystemBlue, fontSize = 24.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold, modifier = Modifier.neonGlow(SystemBlue.copy(alpha=0.5f), 5.dp))
+                    Text("Level $level Hunter", color = FrostWhite, fontSize = 12.sp, fontFamily = ShareTechMono)
                 }
                 Column(horizontalAlignment = Alignment.End) {
-                    Text("SYNC: 88%", color = TertiaryRecovery, fontSize = 16.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
-                    Text("Recovery Optimal", color = Slate, fontSize = 10.sp, fontFamily = ShareTechMono)
+                    Text("SYNC: $syncRate%", color = syncColor, fontSize = 16.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
+                    Text(syncStatus, color = Slate, fontSize = 10.sp, fontFamily = ShareTechMono)
                 }
             }
         }

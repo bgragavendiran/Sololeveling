@@ -22,8 +22,23 @@ import androidx.compose.ui.unit.sp
 import com.heptre.sololeveling.ui.theme.*
 
 @Composable
-fun InitializeSystemScreen(onInitializeComplete: () -> Unit) {
+fun InitializeSystemScreen(
+    viewModel: InitializeSystemViewModel,
+    onInitializeComplete: () -> Unit
+) {
+    val isInitialized by viewModel.isInitialized.collectAsState()
     var playerName by remember { mutableStateOf("") }
+
+    // Auto-navigate if the player is already set up
+    LaunchedEffect(isInitialized) {
+        if (isInitialized == true) onInitializeComplete()
+    }
+
+    // Show nothing while checking DB (avoids flash)
+    if (isInitialized == null || isInitialized == true) {
+        Box(modifier = Modifier.fillMaxSize().background(VoidBlack))
+        return
+    }
     
     // Radial glow
     val radialBrush = Brush.radialGradient(
@@ -116,7 +131,7 @@ fun InitializeSystemScreen(onInitializeComplete: () -> Unit) {
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = { if(playerName.isNotBlank()) onInitializeComplete() },
+                onClick = { if (playerName.isNotBlank()) viewModel.initializePlayer(playerName) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
