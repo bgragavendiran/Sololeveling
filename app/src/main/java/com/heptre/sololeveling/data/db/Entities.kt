@@ -1,6 +1,6 @@
 package com.heptre.sololeveling.data.db
 
-import androidx.room3.*
+import androidx.room.*
 import com.heptre.sololeveling.data.Rank
 import com.heptre.sololeveling.data.StatType
 

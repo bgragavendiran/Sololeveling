@@ -1,7 +1,7 @@
 package com.heptre.sololeveling.data.db
 
 
-import androidx.room3.*
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -12,18 +12,18 @@ interface PlayerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOrUpdatePlayer(player: PlayerEntity)
 
-    @Query("UPDATE player_state SET str = str + :amount WHERE id = 1")
-    suspend fun addStrength(amount: Int)
-
-    @Query("UPDATE player_state SET int = int + :amount WHERE id = 1")
-    suspend fun addIntelligence(amount: Int)
-
-    @Query("UPDATE player_state SET apt = apt + :amount WHERE id = 1")
+    @Query("UPDATE player_state SET `apt` = `apt` + :amount WHERE id = 1")
     suspend fun addAptitude(amount: Int)
 
-    @Query("UPDATE player_state SET end = end + :amount WHERE id = 1")
+    @Query("UPDATE player_state SET `str` = `str` + :amount WHERE id = 1")
+    suspend fun addStrength(amount: Int)
+
+    @Query("UPDATE player_state SET `int` = `int` + :amount WHERE id = 1")
+    suspend fun addIntelligence(amount: Int)
+
+    @Query("UPDATE player_state SET `end` = `end` + :amount WHERE id = 1")
     suspend fun addEndurance(amount: Int)
-    
+
     @Query("UPDATE player_state SET goldCurrent = goldCurrent + :amount WHERE id = 1")
     suspend fun addGold(amount: Int)
 

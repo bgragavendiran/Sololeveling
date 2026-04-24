@@ -1,18 +1,12 @@
 package com.heptre.sololeveling.data.db
 
 import android.content.Context
-
-import androidx.room3.Database
-import androidx.room3.Room
-import androidx.room3.RoomDatabase
-import androidx.room3.TypeConverters
-import androidx.sqlite.SQLiteConnection
-import androidx.sqlite.db.SupportSQLiteDatabase
-
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.heptre.sololeveling.data.Rank
+import kotlinx.coroutines.launch
 
 @Database(entities = [PlayerEntity::class, QuestEntity::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
@@ -25,28 +19,29 @@ abstract class SoloLevelingDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: SoloLevelingDatabase? = null
 
-        fun getDatabase(context: Context): SoloLevelingDatabase {
+        fun getDatabase(context: Context, scope: kotlinx.coroutines.CoroutineScope): SoloLevelingDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     SoloLevelingDatabase::class.java,
                     "solo_leveling_system_db"
                 )
-                .addCallback(DatabaseCallback())
-                .build()
+                    .addCallback(DatabaseCallback(scope))
+                    .build()
                 INSTANCE = instance
                 instance
             }
         }
 
-        private class DatabaseCallback : RoomDatabase.Callback() {
-            // override for Room multi-platform versions
-            override suspend fun onCreate(connection: SQLiteConnection) {
-                super.onCreate(connection)
-                INSTANCE?.let { database ->
-                    val playerDao = database.playerDao()
-                    // Initial Boot Values
-                    playerDao.insertOrUpdatePlayer(
+        private class DatabaseCallback(
+            private val scope: kotlinx.coroutines.CoroutineScope
+        ) : RoomDatabase.Callback() {
+
+            override fun onCreate(db: androidx.sqlite.db.SupportSQLiteDatabase) {
+                super.onCreate(db)
+                scope.launch(kotlinx.coroutines.Dispatchers.IO) {
+                    val playerDao = INSTANCE?.playerDao()
+                    playerDao?.insertOrUpdatePlayer(
                         PlayerEntity(
                             id = 1,
                             name = "PLAYER",
