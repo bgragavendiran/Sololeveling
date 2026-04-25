@@ -18,11 +18,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.heptre.sololeveling.data.alarm.QuestAlarmScheduler
 import com.heptre.sololeveling.data.db.SoloLevelingDatabase
 import com.heptre.sololeveling.data.health.HealthConnectManager
 import com.heptre.sololeveling.ui.SystemScaffold
 import com.heptre.sololeveling.ui.active_zone.ActiveZoneScreen
 import com.heptre.sololeveling.ui.active_zone.ActiveZoneViewModel
+import com.heptre.sololeveling.ui.exercise_countdown.ExerciseCountdownScreen
+import com.heptre.sololeveling.ui.exercise_countdown.ExerciseCountdownViewModel
 import com.heptre.sololeveling.ui.historical_records.HistoricalRecordsScreen
 import com.heptre.sololeveling.ui.initialize_system.InitializeSystemScreen
 import com.heptre.sololeveling.ui.initialize_system.InitializeSystemViewModel
@@ -70,6 +73,7 @@ fun NavigationGraph() {
                 requestPermissions.launch(healthManager.permissions)
             }
         }
+        QuestAlarmScheduler(context).scheduleAll()
     }
 
     val factory = object : ViewModelProvider.Factory {
@@ -81,7 +85,7 @@ fun NavigationGraph() {
                 return StatusWindowViewModel(database.playerDao(), healthManager) as T
             }
             if (modelClass.isAssignableFrom(QuestLogViewModel::class.java)) {
-                return QuestLogViewModel(database.questDao(), database.playerDao()) as T
+                return QuestLogViewModel(database.questDao(), database.playerDao(), database.progressionDao(), healthManager) as T
             }
             if (modelClass.isAssignableFrom(ActiveZoneViewModel::class.java)) {
                 return ActiveZoneViewModel() as T
@@ -131,7 +135,21 @@ fun NavigationGraph() {
             }
 
             composable("quest_log") {
-                QuestLogScreen(viewModel = questLogViewModel)
+                QuestLogScreen(viewModel = questLogViewModel, navController = navController)
+            }
+
+            composable("exercise_countdown/{questId}") { navBackStackEntry ->
+                val questId = navBackStackEntry.arguments?.getString("questId")?.toIntOrNull() ?: 0
+                val exerciseViewModel = ExerciseCountdownViewModel(questId, database.questDao(), database.playerDao())
+                ExerciseCountdownScreen(
+                    viewModel = exerciseViewModel,
+                    onComplete = {
+                        navController.popBackStack()
+                    },
+                    onFailed = {
+                        navController.popBackStack()
+                    }
+                )
             }
 
             composable("historical_records") {

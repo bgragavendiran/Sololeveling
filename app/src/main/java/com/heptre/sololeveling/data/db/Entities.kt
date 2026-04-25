@@ -3,6 +3,8 @@ package com.heptre.sololeveling.data.db
 import androidx.room.*
 import com.heptre.sololeveling.data.Rank
 import com.heptre.sololeveling.data.StatType
+import com.heptre.sololeveling.data.QuestType
+import com.heptre.sololeveling.data.QuestFrequency
 
 @Entity(tableName = "player_state")
 data class PlayerEntity(
@@ -30,19 +32,23 @@ data class QuestEntity(
     val isAutoSync: Boolean,
     val isSkipped: Boolean,
     val createdDate: Long,
-    val lastUpdatedDate: Long
+    val lastUpdatedDate: Long,
+    val questType: QuestType = QuestType.CUSTOM,
+    val frequency: QuestFrequency = QuestFrequency.DAILY,
+    val targetValue: Int = 0,
+    val currentValue: Int = 0,
+    val failureDeadlineMs: Long = 0L,
+    val isSystemQuest: Boolean = false
 )
 
-class Converters {
-    @TypeConverter
-    fun fromStatType(value: StatType) = value.name
-
-    @TypeConverter
-    fun toStatType(value: String) = enumValueOf<StatType>(value)
-
-    @TypeConverter
-    fun fromRank(value: Rank) = value.name
-
-    @TypeConverter
-    fun toRank(value: String) = enumValueOf<Rank>(value)
-}
+@Entity(tableName = "progression")
+data class ProgressionEntity(
+    @PrimaryKey val playerId: Int = 1,
+    val currentStreak: Int = 0,
+    val lastCompletionDate: Long = 0,
+    val weeklyQuestCount: Int = 0,
+    val weeksCompleted: Int = 0,
+    val bestStreak: Int = 0,
+    val totalExp: Int = 0,
+    val lastUpdatedDate: Long = System.currentTimeMillis()
+)

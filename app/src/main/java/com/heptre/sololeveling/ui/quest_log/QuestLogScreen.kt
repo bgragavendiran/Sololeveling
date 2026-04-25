@@ -15,23 +15,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.heptre.sololeveling.data.QuestType
 import com.heptre.sololeveling.data.StatType
 import com.heptre.sololeveling.data.db.QuestEntity
+import com.heptre.sololeveling.data.tts.TtsManager
 import com.heptre.sololeveling.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuestLogScreen(viewModel: QuestLogViewModel) {
-    val dailyQuests by viewModel.dailyQuests.collectAsState()
+fun QuestLogScreen(viewModel: QuestLogViewModel, navController: NavController? = null) {
+    val systemQuests by viewModel.systemQuests.collectAsState()
+    val customQuests by viewModel.customQuests.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val playerState by viewModel.playerState.collectAsState()
     val syncRate by viewModel.syncRate.collectAsState()
     val level by viewModel.level.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
+    var showStudyDialog by remember { mutableStateOf(false) }
+    var showGymDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val ttsManager = remember { TtsManager(context) }
+
+    LaunchedEffect(Unit) {
+        viewModel.ttsEvent.collect { message ->
+            ttsManager.speak(message)
+        }
+    }
 
     val rankLabel = playerState?.rank?.name?.let { "RANK $it" } ?: "RANK ?"
     val syncStatus = when {
@@ -76,16 +92,7 @@ fun QuestLogScreen(viewModel: QuestLogViewModel) {
         
         Spacer(modifier = Modifier.height(16.dp))
         
-        Text(
-            text = "ACTIVE QUESTS",
-            color = FrostWhite,
-            fontSize = 18.sp,
-            fontFamily = Rajdhani,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-        
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -96,62 +103,85 @@ fun QuestLogScreen(viewModel: QuestLogViewModel) {
                     fontFamily = ShareTechMono
                 )
             }
-        } else if (dailyQuests.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = "ALL QUESTS COMPLETE. STANDBY.",
-                    color = FrostWhite,
-                    fontSize = 16.sp,
-                    fontFamily = Outfit
-                )
-            }
         } else {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
             ) {
-                // Group by StatType for visual organization if desired or just list them
-                // The PRD mentions left borders per category. We will just render the list flatly 
-                // but color the borders based on type.
-                
-                items(
-                    items = dailyQuests,
-                    key = { it.id }
-                ) { quest ->
-                    val dismissState = rememberSwipeToDismissBoxState(
-                        confirmValueChange = {
-                            if (it == SwipeToDismissBoxValue.StartToEnd || it == SwipeToDismissBoxValue.EndToStart) {
-                                viewModel.skipQuest(quest)
-                                true
-                            } else {
-                                false
-                            }
-                        }
-                    )
-                    
-                    SwipeToDismissBox(
-                        state = dismissState,
-                        backgroundContent = {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(PenaltyRed.copy(alpha = 0.2f))
-                                    .padding(horizontal = 20.dp),
-                                contentAlignment = Alignment.CenterEnd
-                            ) {
-                                Text("SKIP (100 GOLD)", color = PenaltyRed, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
-                            }
-                        }
-                    ) {
-                        QuestRow(
-                            quest = quest,
-                            onToggle = { viewModel.toggleQuestCompletion(quest) }
+                // System Quests
+                if (systemQuests.isNotEmpty()) {
+                    item {
+                        Text(
+                            text = "MANDATORY PROTOCOLS",
+                            color = SystemBlue,
+                            fontSize = 14.sp,
+                            fontFamily = Rajdhani,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(vertical = 12.dp)
                         )
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
+
+                    items(systemQuests, key = { it.id }) { quest ->
+                        QuestTypeRow(
+                            quest = quest,
+                            viewModel = viewModel,
+                            onBeginExercise = { navController?.navigate("exercise_countdown/${quest.id}") },
+                            onStudyLog = { showStudyDialog = true },
+                            onGymLog = { showGymDialog = true }
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
                 }
-                
+
+                // Custom Quests
+                if (customQuests.isNotEmpty()) {
+                    item {
+                        Text(
+                            text = "ACTIVE CUSTOM QUESTS",
+                            color = FrostWhite,
+                            fontSize = 14.sp,
+                            fontFamily = Rajdhani,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(vertical = 12.dp)
+                        )
+                    }
+
+                    items(customQuests, key = { it.id }) { quest ->
+                        val dismissState = rememberSwipeToDismissBoxState(
+                            confirmValueChange = {
+                                if (it == SwipeToDismissBoxValue.StartToEnd || it == SwipeToDismissBoxValue.EndToStart) {
+                                    viewModel.skipQuest(quest)
+                                    true
+                                } else {
+                                    false
+                                }
+                            }
+                        )
+
+                        SwipeToDismissBox(
+                            state = dismissState,
+                            backgroundContent = {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .background(PenaltyRed.copy(alpha = 0.2f))
+                                        .padding(horizontal = 20.dp),
+                                    contentAlignment = Alignment.CenterEnd
+                                ) {
+                                    Text("SKIP (100 GOLD)", color = PenaltyRed, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        ) {
+                            QuestRow(
+                                quest = quest,
+                                onToggle = { viewModel.toggleQuestCompletion(quest) }
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+                }
+
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
@@ -174,11 +204,210 @@ fun QuestLogScreen(viewModel: QuestLogViewModel) {
     if (showAddDialog) {
         AddQuestDialog(
             onDismiss = { showAddDialog = false },
-            onSave = { title, desc, stat, reward ->
-                viewModel.addCustomQuest(title, desc, stat, reward)
+            onSave = { title, desc, stat, reward, freq, deadlineHours ->
+                viewModel.addCustomQuest(title, desc, stat, reward, freq, deadlineHours)
                 showAddDialog = false
             }
         )
+    }
+
+    if (showStudyDialog) {
+        val studyQuest = systemQuests.find { it.id == 103 }
+        if (studyQuest != null) {
+            StudyLogDialog(
+                currentMinutes = studyQuest.currentValue,
+                targetMinutes = studyQuest.targetValue,
+                onDismiss = { showStudyDialog = false },
+                onLog = { subject, minutes ->
+                    viewModel.logStudySession(minutes)
+                    showStudyDialog = false
+                }
+            )
+        }
+    }
+
+    if (showGymDialog) {
+        val gymQuest = systemQuests.find { it.id == 104 }
+        if (gymQuest != null) {
+            GymLogDialog(
+                currentSessions = gymQuest.currentValue,
+                targetSessions = gymQuest.targetValue,
+                onDismiss = { showGymDialog = false },
+                onLog = {
+                    viewModel.logGymSession()
+                    showGymDialog = false
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun QuestTypeRow(
+    quest: QuestEntity,
+    viewModel: QuestLogViewModel,
+    onBeginExercise: () -> Unit,
+    onStudyLog: () -> Unit,
+    onGymLog: () -> Unit
+) {
+    when (quest.questType) {
+        QuestType.STEPS -> StepsQuestRow(quest, viewModel)
+        QuestType.EXERCISE -> ExerciseQuestRow(quest, onBeginExercise)
+        QuestType.STUDY -> StudyQuestRow(quest, onStudyLog)
+        QuestType.GYM -> GymQuestRow(quest, onGymLog)
+        QuestType.CUSTOM -> QuestRow(quest) { viewModel.toggleQuestCompletion(quest) }
+    }
+}
+
+@Composable
+fun StepsQuestRow(quest: QuestEntity, viewModel: QuestLogViewModel) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(140.dp)
+            .hudGlass()
+            .border(1.dp, Color(0xFF1A2235))
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(quest.title, color = FrostWhite, fontSize = 18.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(12.dp))
+            Box(modifier = Modifier.fillMaxWidth().height(6.dp).background(Obsidian)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth((quest.currentValue.toFloat() / quest.targetValue).coerceIn(0f, 1f))
+                        .fillMaxHeight()
+                        .background(SystemBlue)
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            Text("${quest.currentValue} / ${quest.targetValue} STEPS", color = Slate, fontSize = 12.sp, fontFamily = ShareTechMono)
+        }
+        Button(
+            onClick = { viewModel.syncSteps() },
+            modifier = Modifier
+                .height(56.dp)
+                .width(80.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = SystemBlue.copy(alpha=0.2f), contentColor = SystemBlue),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
+        ) {
+            Text("SYNC", fontFamily = ShareTechMono, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+fun ExerciseQuestRow(quest: QuestEntity, onBegin: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(140.dp)
+            .hudGlass()
+            .border(1.dp, Color(0xFF1A2235))
+            .clickable { if (!quest.isCompleted) onBegin() }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(quest.title, color = FrostWhite, fontSize = 18.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(8.dp))
+            Text(quest.description, color = Slate, fontSize = 12.sp, fontFamily = Outfit)
+        }
+        if (quest.isCompleted) {
+            Icon(Icons.Default.Check, contentDescription = "Complete", tint = TertiaryRecovery, modifier = Modifier.size(32.dp))
+        } else {
+            Button(
+                onClick = onBegin,
+                modifier = Modifier
+                    .height(56.dp)
+                    .width(90.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = SystemBlue, contentColor = VoidBlack),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
+            ) {
+                Text("BEGIN", fontFamily = ShareTechMono, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+            }
+        }
+    }
+}
+
+@Composable
+fun StudyQuestRow(quest: QuestEntity, onLog: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(140.dp)
+            .hudGlass()
+            .border(1.dp, Color(0xFF1A2235))
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(quest.title, color = FrostWhite, fontSize = 18.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(12.dp))
+            Box(modifier = Modifier.fillMaxWidth().height(6.dp).background(Obsidian)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth((quest.currentValue.toFloat() / quest.targetValue).coerceIn(0f, 1f))
+                        .fillMaxHeight()
+                        .background(SystemBlue)
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            Text("${quest.currentValue} / ${quest.targetValue} MINUTES", color = Slate, fontSize = 12.sp, fontFamily = ShareTechMono)
+        }
+        Button(
+            onClick = onLog,
+            modifier = Modifier
+                .height(56.dp)
+                .width(75.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = SystemBlue.copy(alpha=0.2f), contentColor = SystemBlue),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
+        ) {
+            Text("LOG", fontFamily = ShareTechMono, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+        }
+    }
+}
+
+@Composable
+fun GymQuestRow(quest: QuestEntity, onLog: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(140.dp)
+            .hudGlass()
+            .border(1.dp, Color(0xFF1A2235))
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(quest.title, color = FrostWhite, fontSize = 18.sp, fontFamily = Rajdhani, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(12.dp))
+            Box(modifier = Modifier.fillMaxWidth().height(6.dp).background(Obsidian)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth((quest.currentValue.toFloat() / quest.targetValue).coerceIn(0f, 1f))
+                        .fillMaxHeight()
+                        .background(SystemBlue)
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            Text("${quest.currentValue} / ${quest.targetValue} SESSIONS", color = Slate, fontSize = 12.sp, fontFamily = ShareTechMono)
+        }
+        Button(
+            onClick = onLog,
+            modifier = Modifier
+                .height(56.dp)
+                .width(75.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = SystemBlue.copy(alpha=0.2f), contentColor = SystemBlue),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp)
+        ) {
+            Text("LOG", fontFamily = ShareTechMono, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+        }
     }
 }
 

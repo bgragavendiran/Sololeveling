@@ -65,4 +65,55 @@ interface QuestDao {
 
     @Delete
     suspend fun deleteQuest(quest: QuestEntity)
+
+    @Query("SELECT COUNT(*) FROM quests WHERE isSystemQuest = 1")
+    suspend fun getSystemQuestCount(): Int
+
+    @Query("SELECT * FROM quests WHERE isSystemQuest = 1")
+    fun getSystemQuests(): Flow<List<QuestEntity>>
+
+    @Query("SELECT * FROM quests WHERE questType = :type AND isSystemQuest = 1 LIMIT 1")
+    suspend fun getSystemQuestByType(type: String): QuestEntity?
+
+    @Query("SELECT * FROM quests WHERE id = :id")
+    suspend fun getQuestById(id: Int): QuestEntity?
+
+    @Query("UPDATE quests SET currentValue = :currentValue, isCompleted = :isCompleted, lastUpdatedDate = :timestamp WHERE id = :id")
+    suspend fun updateQuestProgress(id: Int, currentValue: Int, isCompleted: Boolean, timestamp: Long)
+
+    @Query("UPDATE quests SET isCompleted = 0, currentValue = 0, lastUpdatedDate = :timestamp WHERE isSystemQuest = 1 AND frequency = 'DAILY'")
+    suspend fun resetDailySystemQuests(timestamp: Long)
+
+    @Query("UPDATE quests SET isCompleted = 0, currentValue = 0, lastUpdatedDate = :timestamp WHERE isSystemQuest = 1 AND frequency = 'BIWEEKLY'")
+    suspend fun resetBiweeklySystemQuests(timestamp: Long)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertQuestIfNotExists(quest: QuestEntity)
+}
+
+@Dao
+interface ProgressionDao {
+    @Query("SELECT * FROM progression WHERE playerId = 1")
+    fun getProgression(): Flow<ProgressionEntity?>
+
+    @Query("SELECT * FROM progression WHERE playerId = 1")
+    suspend fun getProgressionSync(): ProgressionEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateProgression(progression: ProgressionEntity)
+
+    @Query("UPDATE progression SET currentStreak = :streak, lastCompletionDate = :date, bestStreak = :best WHERE playerId = 1")
+    suspend fun updateStreak(streak: Int, date: Long, best: Int)
+
+    @Query("UPDATE progression SET totalExp = totalExp + :exp, lastUpdatedDate = :date WHERE playerId = 1")
+    suspend fun addExperience(exp: Int, date: Long)
+
+    @Query("UPDATE progression SET weeklyQuestCount = weeklyQuestCount + :count WHERE playerId = 1")
+    suspend fun addWeeklyQuests(count: Int)
+
+    @Query("UPDATE progression SET weeksCompleted = weeksCompleted + 1 WHERE playerId = 1")
+    suspend fun completeWeek()
+
+    @Query("UPDATE progression SET currentStreak = 0, weeklyQuestCount = 0, lastUpdatedDate = :date WHERE playerId = 1")
+    suspend fun resetWeekly(date: Long)
 }

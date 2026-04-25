@@ -20,18 +20,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.heptre.sololeveling.data.QuestFrequency
 import com.heptre.sololeveling.data.StatType
 import com.heptre.sololeveling.ui.theme.*
 
 @Composable
 fun AddQuestDialog(
     onDismiss: () -> Unit,
-    onSave: (title: String, description: String, statType: StatType, reward: Int) -> Unit
+    onSave: (title: String, description: String, statType: StatType, reward: Int, frequency: QuestFrequency, deadlineHours: Int) -> Unit
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var reward by remember { mutableStateOf("10") }
     var selectedStat by remember { mutableStateOf(StatType.STRENGTH) }
+    var selectedFrequency by remember { mutableStateOf(QuestFrequency.DAILY) }
+    var deadlineHoursText by remember { mutableStateOf("24") }
 
     Dialog(onDismissRequest = onDismiss) {
         Box(
@@ -91,6 +94,40 @@ fun AddQuestDialog(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Frequency
+                Text("FREQUENCY", color = SystemBlue, fontSize = 10.sp, fontFamily = ShareTechMono)
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    for (freq in listOf(QuestFrequency.DAILY, QuestFrequency.ONCE)) {
+                        val sel = selectedFrequency == freq
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(40.dp)
+                                .background(if (sel) SystemBlue.copy(alpha = 0.2f) else Obsidian)
+                                .border(1.dp, if (sel) SystemBlue else Color(0xFF1A2235))
+                                .clickable { selectedFrequency = freq },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(freq.name.take(6), color = if (sel) SystemBlue else Slate, fontSize = 10.sp, fontFamily = ShareTechMono)
+                        }
+                    }
+                }
+
+                if (selectedFrequency == QuestFrequency.ONCE) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text("DEADLINE (HOURS)", color = SystemBlue, fontSize = 10.sp, fontFamily = ShareTechMono)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    CustomTextField(
+                        value = deadlineHoursText,
+                        onValueChange = { if (it.isEmpty() || it.all { c -> c.isDigit() }) deadlineHoursText = it },
+                        placeholder = "24",
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(32.dp))
 
                 // Actions
@@ -102,7 +139,8 @@ fun AddQuestDialog(
                     Button(
                         onClick = {
                             if (title.isNotBlank() && reward.isNotBlank()) {
-                                onSave(title, description, selectedStat, reward.toIntOrNull() ?: 10)
+                                val deadlineHours = if (selectedFrequency == QuestFrequency.ONCE) deadlineHoursText.toIntOrNull() ?: 24 else 0
+                                onSave(title, description, selectedStat, reward.toIntOrNull() ?: 10, selectedFrequency, deadlineHours)
                             }
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = SystemBlue, contentColor = VoidBlack),
